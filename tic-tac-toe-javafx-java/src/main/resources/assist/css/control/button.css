@@ -1,0 +1,17 @@
+@import "../global-config.css";
+
+.button {
+    -fx-background-color: -fx-default-color;
+    -fx-background-radius: 5;
+/*    -jfx-button-type: RAISED;*/
+    -fx-text-fill: -fx-default-text-color;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: -fx-default-hover-color;
+}
+
+.button .jfx-rippler {
+    -jfx-rippler-fill: -fx-default-rippler-color;
+}

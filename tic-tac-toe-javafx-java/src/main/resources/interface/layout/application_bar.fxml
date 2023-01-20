@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<StackPane fx:id="applicationBarPane" prefWidth="300" styleClass="app-bar"
+           stylesheets="@../../assist/css/interface/layout/application-bar.css"
+           xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.mj.tic.tac.toe.javafx.java.controller.layout.ApplicationBarController">
+    <Label fx:id="applicationBarTitle" text="%control.label.title.default"/>
+    <HBox alignment="CENTER_RIGHT" fillHeight="false" maxHeight="1.7976931348623157E308"
+          maxWidth="1.7976931348623157E308" onMouseDragged="#onBarDragged" onMousePressed="#onBarPressed" spacing="5.0"
+          styleClass="actions-area" StackPane.alignment="CENTER_RIGHT">
+        <JFXButton id="hide" onMouseClicked="#onOptionsBarAction" styleClass="hide">
+            <graphic>
+                <Region/>
+            </graphic>
+        </JFXButton>
+        <JFXButton id="maximize" onMouseClicked="#onOptionsBarAction" styleClass="maximize" disable="true">
+            <graphic>
+                <Region/>
+            </graphic>
+        </JFXButton>
+        <JFXButton id="close" onMouseClicked="#onOptionsBarAction" styleClass="close">
+            <graphic>
+                <Region/>
+            </graphic>
+        </JFXButton>
+    </HBox>
+</StackPane>

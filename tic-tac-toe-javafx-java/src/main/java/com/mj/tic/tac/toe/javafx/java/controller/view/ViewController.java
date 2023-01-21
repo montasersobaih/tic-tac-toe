@@ -80,7 +80,7 @@ public final class ViewController extends BaseController {
                 .forEach(button -> button.setOnMouseClicked(this::onCellClicked));
     }
 
-    private void play() {
+    private void resetPlayArea() {
         for (byte[] line : matrix) {
             Arrays.fill(line, (byte) 0);
         }
@@ -116,20 +116,13 @@ public final class ViewController extends BaseController {
         totalXWins.setText("0");
         totalOWins.setText("0");
         playAreaPane.setDisable(true);
-        playAreaPane.getChildren()
-                .stream()
-                .filter(node -> node instanceof Button)
-                .map(Button.class::cast)
-                .forEach(button -> {
-                    button.setText(null);
-                    button.setDisable(false);
-                });
+        this.resetPlayArea();
     }
 
     @FXML
     private void onPlayGame(MouseEvent event) {
         playAreaPane.setDisable(false);
-        this.play();
+        this.resetPlayArea();
     }
 
     private void onTaskSucceeded(WorkerStateEvent event) {
@@ -160,7 +153,7 @@ public final class ViewController extends BaseController {
 
                 ConfirmDialog.getInstance(contentPane)
                         .setMessage(message)
-                        .setOnConfirmListener(this::play)
+                        .setOnConfirmListener(this::resetPlayArea)
                         .setOnDeclineListener(() -> playAreaPane.setDisable(true))
                         .build()
                         .show();

@@ -6,6 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Montaser Sbaih
+ * @version 1.0
+ * @email montaser.jjs@gmail.com
+ * @phone +962-786258874
+ * @since 20-01-2023
+ */
+
 public final class CheckWinnerTask extends BaseTask<List<Coordinates>> {
 
     private final byte[][] matrix;

@@ -23,6 +23,14 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author Montaser Sbaih
+ * @version 1.0
+ * @email montaser.jjs@gmail.com
+ * @phone +962-786258874
+ * @since 20-01-2023
+ */
+
 public final class ViewController extends BaseController {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();

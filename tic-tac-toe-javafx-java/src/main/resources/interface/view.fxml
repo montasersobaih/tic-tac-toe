@@ -17,6 +17,9 @@
             <StackPane fx:id="contentPane" prefHeight="150.0" prefWidth="200.0" styleClass="content-pane"
                        BorderPane.alignment="CENTER">
                 <BorderPane prefHeight="200.0" prefWidth="200.0">
+                    <StackPane.margin>
+                        <Insets top="10" right="5" bottom="5" left="5"/>
+                    </StackPane.margin>
                     <left>
                         <BorderPane prefWidth="180.0" styleClass="left-panel" BorderPane.alignment="CENTER">
                             <BorderPane.margin>

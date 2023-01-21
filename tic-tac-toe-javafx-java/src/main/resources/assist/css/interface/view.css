@@ -22,8 +22,6 @@
     -fx-background-color: -fx-darken-background-color, -fx-default-background-color;
     -fx-background-radius: 0 0 13 13, 10 10 13 13;
 
-    -fx-padding: 10 5 5 5;
-
     -fx-effect: none, dropshadow(three-pass-box, -fx-30-primary-shadow-opacity, 25, 0, 3, 3);
 }
 

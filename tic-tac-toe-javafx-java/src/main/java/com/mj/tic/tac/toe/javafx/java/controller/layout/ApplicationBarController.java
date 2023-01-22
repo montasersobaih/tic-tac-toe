@@ -4,11 +4,13 @@ import com.jfoenix.controls.JFXButton;
 import com.mj.tic.tac.toe.javafx.java.controller.BaseController;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.Optional;
@@ -65,6 +67,8 @@ public final class ApplicationBarController extends BaseController {
                 break;
             case "close":
                 stage.close();
+                Platform.exit();
+                Event.fireEvent(stage, new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
                 break;
         }
     }

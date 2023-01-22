@@ -3,19 +3,21 @@ package com.mj.tic.tac.toe.javafx.java.util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 /**
- * @author Montaser Sbaih
+ * @author Montaser Jamal
  * @version 1.0
  * @email montaser.jjs@gmail.com
  * @phone +962-786258874
- * @since 20-01-2023
+ * @since 22-01-2023
  */
 
 @Data
 @AllArgsConstructor
-public final class Coordinates {
+public final class Winner {
 
-    private final int x;
+    private final char player;
 
-    private final int y;
+    private final List<Coordinates> locations;
 }

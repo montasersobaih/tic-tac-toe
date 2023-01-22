@@ -4,18 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * @author Montaser Sbaih
+ * @author Montaser Jamal
  * @version 1.0
  * @email montaser.jjs@gmail.com
  * @phone +962-786258874
- * @since 20-01-2023
+ * @since 22-01-2023
  */
 
 @Data
 @AllArgsConstructor
-public final class Coordinates {
+public final class Mark {
 
-    private final int x;
+    private final char value;
 
-    private final int y;
+    private final Coordinates coordinates;
 }

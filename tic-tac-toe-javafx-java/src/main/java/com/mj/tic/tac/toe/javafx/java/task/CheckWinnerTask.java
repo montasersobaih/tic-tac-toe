@@ -1,6 +1,8 @@
 package com.mj.tic.tac.toe.javafx.java.task;
 
 import com.mj.tic.tac.toe.javafx.java.util.Coordinates;
+import com.mj.tic.tac.toe.javafx.java.util.Mark;
+import com.mj.tic.tac.toe.javafx.java.util.Winner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,19 +16,30 @@ import java.util.List;
  * @since 20-01-2023
  */
 
-public final class CheckWinnerTask extends BaseTask<List<Coordinates>> {
+public final class CheckWinnerTask extends BaseTask<Winner> {
 
     private final byte[][] matrix;
 
-    private final Coordinates location;
+    private final Mark mark;
 
-    public CheckWinnerTask(byte[][] matrix, Coordinates location) {
+    public CheckWinnerTask(byte[][] matrix, Mark mark) {
         this.matrix = matrix;
-        this.location = location;
+        this.mark = mark;
     }
 
     @Override
-    protected List<Coordinates> call() throws Exception {
+    protected Winner call() {
+        List<Coordinates> locations = this.check();
+
+        if (locations.size() == 3) {
+            return new Winner(mark.getValue(), locations);
+        }
+
+        return null;
+    }
+
+    private List<Coordinates> check() {
+        Coordinates location = mark.getCoordinates();
         byte value = matrix[location.getX()][location.getY()];
         List<Coordinates> coordinates = new ArrayList<>();
 

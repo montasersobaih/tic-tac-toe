@@ -30,7 +30,7 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
     @Override
     protected Winner call() {
         List<Coordinates> locations = this.check();
-        System.out.println(locations);
+
         if (locations.size() == 3) {
             return new Winner(mark.getValue(), locations);
         }

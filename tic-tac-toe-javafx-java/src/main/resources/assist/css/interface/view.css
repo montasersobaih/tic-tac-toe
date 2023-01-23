@@ -2,6 +2,7 @@
 @import "../control/pane.css";
 @import "../control/label.css";
 @import "../control/button.css";
+@import "../control/scroll-bar.css";
 
 .pane {
     -fx-background-color: -fx-default-background-color;
@@ -41,7 +42,39 @@
 }
 
 .left-panel > .list-view.body {
+    -fx-background-color: -fx-darken-background-color;
     -fx-background-radius: 3;
+
+    -fx-border-color: -fx-default-color;
+    -fx-border-radius: 3;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-background-insets: 2;
+    -fx-background-radius: 3;
+
+    -fx-alignment: center;
+
+    -fx-padding: 8;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell > .text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even,
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even:selected {
+    -fx-background-color: -fx-default-color;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:odd,
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:odd:selected {
+    -fx-background-color: derive(-fx-default-color, 25%);
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:empty {
+    -fx-background-color: transparent;
 }
 
 .left-panel > .footer {

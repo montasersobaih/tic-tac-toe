@@ -121,13 +121,15 @@ public final class ViewController extends BaseController {
                 Label label;
                 String message;
                 if (Objects.nonNull(winner)) {
-                    label = (count - 1) % 2 == 0 ? totalXWins : totalOWins;
+                    label = count % 2 == 0 ? totalXWins : totalOWins;
                     message = getString("message.alert.player.winner");
                     message = String.format(message, winner.getPlayer());
                 } else {
                     label = totalDraw;
                     message = getString("message.alert.player.draw");
                 }
+
+                wins.getItems().add(message.split(", ")[0]);
 
                 int oldValue = Integer.parseInt(label.getText());
                 label.setText(String.valueOf(oldValue + 1));

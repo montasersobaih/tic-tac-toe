@@ -1,0 +1,83 @@
+@import "../global-config.css";
+
+.scroll-bar:vertical {
+    -fx-pref-width: 6;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 6;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: none;
+}
+
+.scroll-bar:vertical > .track-background {
+    -fx-background-insets: 1 1 1 0;
+}
+
+.scroll-bar:horizontal > .track-background {
+    -fx-background-insets: 0 1 1 1;
+}
+
+.scroll-bar:vertical > .track-background,
+.scroll-bar:horizontal > .track-background {
+    -fx-background-color: -fx-darken-background-color;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar:vertical > .thumb {
+    -fx-background-insets: -14 1 -14 0;
+}
+
+.scroll-bar:horizontal > .thumb {
+    -fx-background-insets: 0 -14 1 -14;
+}
+
+.scroll-bar:vertical > .thumb,
+.scroll-bar:horizontal > .thumb {
+    -fx-background-color: -fx-default-color;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar:vertical > .increment-button,
+.scroll-bar:vertical > .decrement-button {
+    -fx-padding: 5 2 5 2;
+}
+
+.scroll-bar:horizontal > .increment-button,
+.scroll-bar:horizontal > .decrement-button {
+    -fx-padding: 2 5 2 5;
+}
+
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-background-color: transparent;
+}
+
+/*.scroll-bar:hover > .increment-button > .increment-arrow,*/
+/*.scroll-bar:hover > .decrement-button > .decrement-arrow {*/
+/*    -fx-background-color: rgba(255, 255, 255, 1);*/
+/*}*/
+
+.scroll-bar:vertical > .increment-button > .increment-arrow {
+    -fx-shape: "M298 426h428l-214 214z";
+}
+
+.scroll-bar:vertical > .decrement-button > .decrement-arrow {
+    -fx-shape: "M298 598l214-214 214 214h-428z";
+}
+
+.scroll-bar:horizontal > .increment-button > .increment-arrow {
+    -fx-shape: "M0 428l0 -428l214 214l-214 214z";
+}
+
+.scroll-bar:horizontal > .decrement-button > .decrement-arrow {
+    -fx-shape: "M214 0l0 428l-214 -214l214 -214z";
+}

@@ -30,7 +30,7 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
     @Override
     protected Winner call() {
         List<Coordinates> locations = this.check();
-
+        System.out.println(locations);
         if (locations.size() == 3) {
             return new Winner(mark.getValue(), locations);
         }
@@ -57,7 +57,7 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
         coordinates.clear();
         for (int i = 0; i < matrix.length; i++) {
             if (matrix[i][location.getY()] == value) {
-                coordinates.add(new Coordinates(location.getX(), i));
+                coordinates.add(new Coordinates(i, location.getY()));
                 if (coordinates.size() == 3) {
                     return coordinates;
                 }
@@ -68,7 +68,7 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
         coordinates.clear();
         for (int i = 0; i < matrix.length; i++) {
             if (matrix[i][i] == value) {
-                coordinates.add(new Coordinates(location.getX(), i));
+                coordinates.add(new Coordinates(i, i));
                 if (coordinates.size() == 3) {
                     return coordinates;
                 }
@@ -80,7 +80,7 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
         for (int i = matrix.length - 1; i >= 0; i--) {
             int lastIndex = matrix.length - 1;
             if (matrix[lastIndex - i][i] == value) {
-                coordinates.add(new Coordinates(location.getX(), i));
+                coordinates.add(new Coordinates(lastIndex - i, i));
                 if (coordinates.size() == 3) {
                     return coordinates;
                 }

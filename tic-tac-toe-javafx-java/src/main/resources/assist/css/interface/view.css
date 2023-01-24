@@ -58,11 +58,6 @@
     -fx-padding: 8;
 }
 
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell > .text {
-    -fx-fill: white;
-    -fx-font-weight: bold;
-}
-
 .left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even,
 .left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even:selected {
     -fx-background-color: -fx-default-color;
@@ -75,6 +70,11 @@
 
 .left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:empty {
     -fx-background-color: transparent;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell > .text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
 }
 
 .left-panel > .footer {
@@ -112,10 +112,6 @@
     -fx-font-family: "URW Chancery L";
 }
 
-.center-panel > .button > .text {
-    -fx-fill: -fx-default-color;
-}
-
 .center-panel:disabled > .button {
     -fx-background-color: -fx-darken-background-color;
 }
@@ -138,4 +134,8 @@
 
 .center-panel > .button.bottom-right {
     -fx-background-radius: 0 0 4 0;
+}
+
+.center-panel > .button > .text {
+    -fx-fill: -fx-default-color;
 }

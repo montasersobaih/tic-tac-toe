@@ -1,6 +1,7 @@
 package com.mj.tic.tac.toe.javafx.java.task;
 
 import javafx.application.Platform;
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
@@ -34,12 +35,15 @@ public final class ResetPlayAreaTask extends BaseTask<Void> {
 
         for (Node node : playAreaPane.getChildren()) {
             Button button = (Button) node;
-            Platform.runLater(() -> {
-                button.setText(null);
-                button.setDisable(false);
-            });
+            Platform.runLater(() -> this.resetButton(button));
         }
 
         return null;
+    }
+
+    private void resetButton(Button button) {
+        button.setText(null);
+        button.setDisable(false);
+        button.pseudoClassStateChanged(PseudoClass.getPseudoClass("winner"), false);
     }
 }

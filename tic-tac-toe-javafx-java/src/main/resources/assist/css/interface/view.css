@@ -120,6 +120,10 @@
     -fx-opacity: 1;
 }
 
+.center-panel > .button:winner {
+     -fx-background-color: derive(-fx-default-color, 60%);
+}
+
 .center-panel > .button.top-left {
     -fx-background-radius: 4 0 0 0;
 }

@@ -6,11 +6,14 @@ import com.mj.tic.tac.toe.javafx.java.dialog.ConfirmDialog;
 import com.mj.tic.tac.toe.javafx.java.task.CheckWinnerTask;
 import com.mj.tic.tac.toe.javafx.java.task.MarkCellTask;
 import com.mj.tic.tac.toe.javafx.java.task.ResetPlayAreaTask;
+import com.mj.tic.tac.toe.javafx.java.util.Coordinates;
 import com.mj.tic.tac.toe.javafx.java.util.Mark;
 import com.mj.tic.tac.toe.javafx.java.util.Winner;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -19,10 +22,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author Montaser Sbaih
@@ -33,12 +35,6 @@ import java.util.concurrent.Executors;
  */
 
 public final class ViewController extends BaseController {
-
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
-    private final byte[][] matrix = new byte[3][3];
-
-    private byte count = 0;
 
     @FXML
     private StackPane viewPane;
@@ -101,7 +97,7 @@ public final class ViewController extends BaseController {
     private void onCellClicked(MouseEvent event) {
         Button button = (Button) event.getSource();
 
-        MarkCellTask task = new MarkCellTask(matrix, button, count % 2);
+        MarkCellTask task = new MarkCellTask(matrix, button, super.getTurn());
         task.setOnSucceeded(this::onTaskSucceeded);
         executor.execute(task);
     }
@@ -109,21 +105,28 @@ public final class ViewController extends BaseController {
     private void onTaskSucceeded(WorkerStateEvent event) {
         Worker<?> worker = event.getSource();
         if (worker instanceof ResetPlayAreaTask) {
-            count = 0;
+            super.resetCount();
         } else if (worker instanceof MarkCellTask) {
             Mark mark = (Mark) worker.getValue();
+
             CheckWinnerTask checkWinnerTask = new CheckWinnerTask(matrix, mark);
             checkWinnerTask.setOnSucceeded(this::onTaskSucceeded);
             executor.execute(checkWinnerTask);
         } else if (worker instanceof CheckWinnerTask) {
             Winner winner = (Winner) worker.getValue();
-            if (Objects.nonNull(winner) || ++count == 9) {
+            if (Objects.nonNull(winner) || super.nextCount() == 9) {
                 Label label;
                 String message;
                 if (Objects.nonNull(winner)) {
-                    label = count % 2 == 0 ? totalXWins : totalOWins;
+                    label = super.getTurn() == 0 ? totalXWins : totalOWins;
                     message = getString("message.alert.player.winner");
                     message = String.format(message, winner.getPlayer());
+
+                    List<Node> buttons = playAreaPane.getChildren();
+                    for (Coordinates location : winner.getLocations()) {
+                        Button button = (Button) buttons.get(location.getX() * 3 + location.getY());
+                        button.pseudoClassStateChanged(PseudoClass.getPseudoClass("winner"), true);
+                    }
                 } else {
                     label = totalDraw;
                     message = getString("message.alert.player.draw");

@@ -1,0 +1,21 @@
+@import "../global-config.css";
+
+.text-field {
+    -fx-accent: -fx-default-color; /*for text selection color*/
+    /*-fx-focus-color: rgba(202, 65, 69, 0.5);*/
+    -fx-pref-height: 30;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-prompt-text-fill: darkgray;
+    -fx-faint-focus-color: transparent;
+    -fx-effect: dropshadow(gaussian, -fx-30-primary-shadow-opacity, 10, 0, 0, 0);
+}
+
+.text-field:focused {
+    -fx-background-color: -fx-30-secondary-shadow-opacity, white, transparent, white;
+    -fx-effect: dropshadow(gaussian, -fx-30-secondary-shadow-opacity, 10, 0, 0, 0);
+}
+
+.text-field:disabled {
+    -fx-prompt-text-fill: black;
+}

@@ -1,0 +1,37 @@
+@import "../../global-config.css";
+@import "../../control/label.css";
+@import "../../control/button.css";
+@import "../../control/padded-dialog.css";
+
+.pane {
+    -fx-pref-width: 300;
+    -fx-pref-height: 150;
+
+    -fx-background-radius: 20;
+
+    -fx-border-color: -fx-default-color;
+    -fx-border-radius: 14;
+    -fx-border-width: 2;
+}
+
+.body {
+    -fx-pref-height: 30;
+    -fx-wrap-text: true;
+    -fx-text-fill: #828282;
+    -fx-padding: 0 8 0 8;
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-default-color;
+    -jfx-button-type: FLAT;
+    -fx-pref-width: -1;
+}
+
+.button:hover {
+    -fx-background-color: transparent;
+}
+
+.button .jfx-rippler {
+    -jfx-rippler-fill: lightgray;
+}

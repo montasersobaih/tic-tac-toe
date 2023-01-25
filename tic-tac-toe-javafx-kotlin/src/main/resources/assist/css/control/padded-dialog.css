@@ -1,0 +1,6 @@
+@import "../global-config.css";
+@import "../control/dialog.css";
+
+.pane {
+    -fx-padding: 5;
+}

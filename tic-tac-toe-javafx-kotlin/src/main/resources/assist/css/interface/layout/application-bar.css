@@ -1,0 +1,99 @@
+@import "../../global-config.css";
+@import "../../control/label.css";
+@import "../../control/button.css";
+
+.app-bar {
+    -fx-background-color: -fx-darken-background-color;
+    -fx-background-radius: 8 8 0 0;
+
+    -fx-effect: dropshadow(gaussian, -fx-30-primary-shadow-opacity, 10, 0, 0, 0);
+}
+
+.app-bar > .actions-area {
+    -fx-padding: 4;
+}
+
+.app-bar > .actions-area > .button {
+    -fx-min-width: 17;
+    -fx-min-height: 17;
+    -fx-max-width: 17;
+    -fx-max-height: 17;
+
+    -fx-content-display: graphic_only;
+
+    -fx-background-radius: 25;
+}
+
+.app-bar > .actions-area > .button > .jfx-rippler {
+    -jfx-rippler-fill: none;
+}
+
+.app-bar > .actions-area > .button.hide {
+    -fx-hide-button-background-color: #F9D515;
+
+    -fx-background-color: -fx-hide-button-background-color;
+}
+
+.app-bar > .actions-area > .button.hide:pressed {
+    -fx-background-color: derive(-fx-hide-button-background-color, 25%);
+}
+
+.app-bar > .actions-area > .button.hide:hover > Region,
+.app-bar > .actions-area > .button.hide:pressed > Region {
+    -fx-min-height: 1;
+    -fx-min-width: 7;
+    -fx-max-height: 1;
+    -fx-max-width: 7;
+
+    -fx-background-color: derive(-fx-hide-button-background-color, -25%);
+    -fx-shape: "M417.4,224H94.6C77.7,224,64,238.3,64,256c0,17.7,13.7,32,30.6,32h322.8c16.9,0,30.6-14.3,30.6-32 C448,238.3,434.3,224,417.4,224z";
+}
+
+.app-bar > .actions-area > .button.maximize {
+    -fx-maximize-button-background-color: #AD00EE;
+    -fx-background-color: -fx-maximize-button-background-color;
+}
+
+.app-bar > .actions-area > .button.maximize:pressed {
+    -fx-background-color: derive(-fx-maximize-button-background-color, 15%);
+}
+
+.app-bar > .actions-area > .button.maximize:hover > Region,
+.app-bar > .actions-area > .button.maximize:pressed > Region {
+    -fx-min-height: 7;
+    -fx-min-width: 7;
+    -fx-max-height: 7;
+    -fx-max-width: 7;
+
+    -fx-background-color: derive(-fx-maximize-button-background-color, -25%);
+    -fx-shape: "M28,2h-6c-1.104,0-2,0.896-2,2s0.896,2,2,2h1.2l-4.6,4.601C18.28,10.921,18,11.344,18,12c0,1.094,0.859,2,2,2  c0.641,0,1.049-0.248,1.4-0.6L26,8.8V10c0,1.104,0.896,2,2,2s2-0.896,2-2V4C30,2.896,29.104,2,28,2z M12,18  c-0.641,0-1.049,0.248-1.4,0.6L6,23.2V22c0-1.104-0.896-2-2-2s-2,0.896-2,2v6c0,1.104,0.896,2,2,2h6c1.104,0,2-0.896,2-2  s-0.896-2-2-2H8.8l4.6-4.601C13.72,21.079,14,20.656,14,20C14,18.906,13.141,18,12,18z";
+}
+
+.app-bar > .actions-area > .button.maximize:hover:reverse > Region,
+.app-bar > .actions-area > .button.maximize:pressed:reverse > Region {
+    -fx-shape: "M 4,30 c 0.641,0 1.049,-0.248 1.4,-0.6 L 10,24.8 V 26 c 0,1.104 0.896,2 2,2 1.104,0 2,-0.896 2,-2 v -6 c 0,-1.104 -0.896,-2 -2,-2 H 6 c -1.104,0 -2,0.896 -2,2 0,1.104 0.896,2 2,2 H 7.2 L 2.6,26.601 C 2.28,26.921 2,27.344 2,28 c 0,1.094 0.859,2 2,2 z M 28,2.0000004 c -0.641,0 -1.049,0.248 -1.4,0.6 L 22,7.2000006 v -1.2 c 0,-1.104 -0.896,-2 -2,-2 -1.104,0 -2,0.896 -2,2 V 12 c 0,1.104 0.896,2 2,2 h 6 c 1.104,0 2,-0.896 2,-2 0,-1.104 -0.896,-2 -2,-2 h -1.2 l 4.6,-4.6009994 c 0.32,-0.32 0.6,-0.743 0.6,-1.399 0,-1.0940002 -0.859,-2.0000002 -2,-2.0000002 z";
+}
+
+.app-bar > .actions-area > .button.close {
+    -fx-close-button-background-color: #D03334;
+    -fx-background-color: -fx-close-button-background-color;
+}
+
+.app-bar > .actions-area > .button.close:pressed {
+    -fx-background-color: derive(-fx-close-button-background-color, 15%);
+}
+
+.app-bar > .actions-area > .button.close:hover > Region,
+.app-bar > .actions-area > .button.close:pressed > Region {
+    -fx-min-height: 7;
+    -fx-min-width: 7;
+    -fx-max-height: 7;
+    -fx-max-width: 7;
+
+    -fx-background-color: derive(-fx-close-button-background-color, -25%);
+    -fx-shape: "M59.595,52.861L37.094,30.359L59.473,7.98c1.825-1.826,1.825-4.786,0-6.611 c-1.826-1.825-4.785-1.825-6.611,0L30.483,23.748L8.105,1.369c-1.826-1.825-4.785-1.825-6.611,0c-1.826,1.826-1.826,4.786,0,6.611 l22.378,22.379L1.369,52.861c-1.826,1.826-1.826,4.785,0,6.611c0.913,0.913,2.109,1.369,3.306,1.369s2.393-0.456,3.306-1.369 l22.502-22.502l22.501,22.502c0.913,0.913,2.109,1.369,3.306,1.369s2.393-0.456,3.306-1.369 C61.42,57.647,61.42,54.687,59.595,52.861z";
+}
+
+.app-bar > .label {
+    -fx-font-size: 14;
+}

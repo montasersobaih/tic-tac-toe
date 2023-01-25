@@ -1,0 +1,5 @@
+@import "../global-config.css";
+
+.pane {
+    -fx-background-color: transparent;
+}

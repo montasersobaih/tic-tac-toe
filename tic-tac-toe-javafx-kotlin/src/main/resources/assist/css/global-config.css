@@ -1,0 +1,16 @@
+* {
+    -fx-default-background-color: #DCBC96;
+    -fx-darken-background-color: #be9e78;
+    -fx-default-color: #4D2120;
+    -fx-default-hover-color: derive(-fx-default-color, 40%);
+    -fx-default-pressed-color: derive(-fx-default-color, 70%);
+    -fx-default-rippler-color: derive(-fx-default-color, 80%);
+    -fx-default-text-color: white;
+
+    -fx-primary-shadow-color: black;
+    -fx-secondary-shadow-color: -fx-default-color;
+    -fx-30-primary-shadow-opacity: rgba(0, 0, 0, 0.3);
+
+    /*override attributes*/
+    -fx-focus-traversable: false;
+}

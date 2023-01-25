@@ -1,0 +1,145 @@
+@import "../global-config.css";
+@import "../control/pane.css";
+@import "../control/label.css";
+@import "../control/button.css";
+@import "../control/scroll-bar.css";
+
+.pane {
+    -fx-background-color: -fx-default-background-color;
+    -fx-background-radius: 20;
+
+    -fx-border-color: -fx-default-color;
+    -fx-border-radius: 14;
+    -fx-border-width: 2;
+}
+
+.pane > * > .app-bar {
+    -fx-background-radius: 13 13 0 0;
+
+    -fx-effect: none;
+}
+
+.pane > * > .content-pane {
+    -fx-background-color: -fx-darken-background-color, -fx-default-background-color;
+    -fx-background-radius: 0 0 13 13, 10 10 13 13;
+
+    -fx-effect: none, dropshadow(three-pass-box, -fx-30-primary-shadow-opacity, 25, 0, 3, 3);
+}
+
+.left-panel {
+    -fx-background-color: -fx-darken-background-color;
+    -fx-background-radius: 10;
+
+    -fx-padding: 3;
+}
+
+.left-panel > .header > .button.reset {
+    -fx-background-radius: 8 0 0 3;
+}
+
+.left-panel > .header > .button.play {
+    -fx-background-radius: 0 8 3 0;
+}
+
+.left-panel > .list-view.body {
+    -fx-background-color: -fx-darken-background-color;
+    -fx-background-radius: 3;
+
+    -fx-border-color: -fx-default-color;
+    -fx-border-radius: 3;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-background-insets: 2;
+    -fx-background-radius: 3;
+
+    -fx-alignment: center;
+
+    -fx-padding: 8;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even,
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even:selected {
+    -fx-background-color: -fx-default-color;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:odd,
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:odd:selected {
+    -fx-background-color: derive(-fx-default-color, 25%);
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell > .text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+
+.left-panel > .footer {
+    -fx-background-color: -fx-default-color;
+    -fx-background-radius: 3 3 8 8;
+
+
+    -fx-padding: 0 0 0 8;
+}
+
+.left-panel > .footer > .label > .text {
+    -fx-fill: -fx-default-text-color;
+}
+
+.center-panel {
+    -fx-background-color: -fx-darken-background-color, -fx-default-color;
+    -fx-background-radius: 10, 8;
+    -fx-background-insets: 0, 3;
+
+    -fx-padding: 8;
+
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+}
+
+.center-panel > .button {
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+
+    -fx-background-color: -fx-default-background-color;
+    -fx-background-radius: 0;
+
+    -fx-font-size: 50;
+    -fx-font-weight: bold;
+    -fx-font-family: "URW Chancery L";
+}
+
+.center-panel:disabled > .button {
+    -fx-background-color: -fx-darken-background-color;
+}
+
+.center-panel > .button:disabled {
+    -fx-opacity: 1;
+}
+
+.center-panel > .button:winner {
+     -fx-background-color: derive(-fx-default-color, 60%);
+}
+
+.center-panel > .button.top-left {
+    -fx-background-radius: 4 0 0 0;
+}
+
+.center-panel > .button.top-right {
+    -fx-background-radius: 0 4 0 0;
+}
+
+.center-panel > .button.bottom-left {
+    -fx-background-radius: 0 0 0 4;
+}
+
+.center-panel > .button.bottom-right {
+    -fx-background-radius: 0 0 4 0;
+}
+
+.center-panel > .button > .text {
+    -fx-fill: -fx-default-color;
+}

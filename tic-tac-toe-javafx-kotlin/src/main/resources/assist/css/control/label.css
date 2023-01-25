@@ -1,0 +1,9 @@
+@import "../global-config.css";
+
+.label {
+    -fx-font-weight: bold;
+}
+
+.label > .text {
+    -fx-fill: -fx-default-color;
+}

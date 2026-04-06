@@ -4,8 +4,24 @@
 @import "../../control/padded-dialog.css";
 
 .pane {
-    -fx-pref-width: 400;
-    -fx-pref-height: 300;
+    -fx-pref-width: 300;
+    -fx-pref-height: 150;
+
+    -fx-background-radius: 20;
+
+    -fx-border-color: -fx-default-color;
+    -fx-border-radius: 14;
+    -fx-border-width: 2;
+}
+
+.body {
+    -fx-pref-height: 30;
+    -fx-wrap-text: true;
+    -fx-text-fill: #828282;
+    -fx-padding: 0 8 0 8;
+    -fx-border-color: -fx-default-color;
+    -fx-border-width: 2 0 2 0;
+    -fx-border-insets: 0 -6 0 -6;
 }
 
 /*.text-flow {*/

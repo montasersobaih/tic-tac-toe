@@ -12,7 +12,6 @@ import com.mj.tic.tac.toe.javafx.java.util.FXInterface;
 
 public enum DInterface implements FXInterface {
 
-    ALERT_DIALOG(ResourcePath.DIALOG.concat("alert_dialog.fxml")),
     CONFIRM_DIALOG(ResourcePath.DIALOG.concat("confirm_dialog.fxml"));
 
     private final String value;

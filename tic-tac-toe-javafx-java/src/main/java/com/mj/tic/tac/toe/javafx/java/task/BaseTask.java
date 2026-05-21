@@ -12,6 +12,11 @@ import javafx.concurrent.Task;
 
 abstract class BaseTask<V> extends Task<V> {
 
+    /**
+     * Invoked on a background thread to perform the task's work.
+     *
+     * @return The computed result, or {@code null} if the task produces no value.
+     */
     @Override
     protected abstract V call() throws Exception;
 }

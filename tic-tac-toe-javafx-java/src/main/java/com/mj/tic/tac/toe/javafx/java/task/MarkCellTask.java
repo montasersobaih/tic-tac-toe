@@ -16,16 +16,24 @@ import javafx.scene.layout.GridPane;
 
 public final class MarkCellTask extends BaseTask<Mark> {
 
-    /** The two player symbols — index 0 = 'X' (first player), index 1 = 'O' (second player). */
+    /**
+     * The two player symbols — index 0 = 'X' (first player), index 1 = 'O' (second player).
+     */
     private final char[] player = {'X', 'O'};
 
-    /** The 3×3 byte matrix backing the game board (0 = empty, 1 = player 1, 2 = player 2). */
+    /**
+     * The 3×3 byte matrix backing the game board (0 = empty, 1 = player 1, 2 = player 2).
+     */
     private final byte[][] matrix;
 
-    /** The JavaFX {@link Button} that was clicked, representing the cell to mark. */
+    /**
+     * The JavaFX {@link Button} that was clicked, representing the cell to mark.
+     */
     private final Button button;
 
-    /** The current turn index (0 for the first player, 1 for the second). */
+    /**
+     * The current turn index (0 for the first player, 1 for the second).
+     */
     private final int turn;
 
     /**
@@ -48,7 +56,7 @@ public final class MarkCellTask extends BaseTask<Mark> {
      * schedules the button's text to be set on the JavaFX Application Thread.
      *
      * @return A {@link Mark} containing the player's symbol ('X' or 'O') and the cell's
-     *         {@link Coordinates}.
+     * {@link Coordinates}.
      */
     @Override
     protected Mark call() {

@@ -7,10 +7,11 @@
     -fx-pref-width: 300;
     -fx-pref-height: 150;
 
-    -fx-background-radius: 20;
+    -fx-background-radius: 14;
+    -fx-background-color: derive(-fx-default-background-color, 25%);
 
     -fx-border-color: -fx-default-color;
-    -fx-border-radius: 14;
+    -fx-border-radius: 8;
     -fx-border-width: 2;
 }
 

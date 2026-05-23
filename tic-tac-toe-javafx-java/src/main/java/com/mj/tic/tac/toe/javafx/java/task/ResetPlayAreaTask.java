@@ -1,12 +1,11 @@
 package com.mj.tic.tac.toe.javafx.java.task;
 
+import java.util.Arrays;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-
-import java.util.Arrays;
 
 /**
  * @author Montaser Jamal
@@ -18,25 +17,29 @@ import java.util.Arrays;
 
 public final class ResetPlayAreaTask extends BaseTask<Void> {
 
-    /** The 3×3 game board matrix to clear (all cells set back to 0). */
-    private final byte[][] matrix;
+    /**
+     * The 3×3 game board to clear (all cells set back to 0).
+     */
+    private final byte[][] board;
 
-    /** The pane containing the board's button grid to reset. */
+    /**
+     * The pane containing the board's button grid to reset.
+     */
     private final Pane playAreaPane;
 
     /**
      * Constructs a new reset-play-area task.
      *
-     * @param matrix       The game board matrix to clear.
+     * @param board        The game board to clear.
      * @param playAreaPane The pane containing the board buttons to reset.
      */
-    public ResetPlayAreaTask(byte[][] matrix, Pane playAreaPane) {
-        this.matrix = matrix;
+    public ResetPlayAreaTask(byte[][] board, Pane playAreaPane) {
+        this.board = board;
         this.playAreaPane = playAreaPane;
     }
 
     /**
-     * Executed on a background thread. Fills every cell of the board matrix with 0, then
+     * Executed on a background thread. Fills every cell of the board with 0, then
      * iterates over all child nodes of the play-area pane to reset each button's text,
      * disabled state, and winner pseudo-class on the JavaFX Application Thread.
      *
@@ -44,7 +47,7 @@ public final class ResetPlayAreaTask extends BaseTask<Void> {
      */
     @Override
     protected Void call() {
-        for (byte[] line : matrix) {
+        for (byte[] line : board) {
             Arrays.fill(line, (byte) 0);
         }
 

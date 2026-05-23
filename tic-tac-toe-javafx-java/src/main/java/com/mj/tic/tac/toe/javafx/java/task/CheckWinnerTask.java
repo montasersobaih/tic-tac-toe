@@ -18,9 +18,9 @@ import java.util.List;
 public final class CheckWinnerTask extends BaseTask<Winner> {
 
     /**
-     * The 3×3 game board matrix to inspect.
+     * The 3×3 game board to inspect.
      */
-    private final byte[][] matrix;
+    private final byte[][] board;
 
     /**
      * The most recent {@link Mark} placed by a player — used as the starting point for win checks.
@@ -30,12 +30,12 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
     /**
      * Constructs a new check-winner task.
      *
-     * @param matrix The 3×3 game board matrix to inspect.
-     * @param mark   The most recent mark placed; its coordinates determine which row, column,
-     *               and diagonals are checked.
+     * @param board The 3×3 game board to inspect.
+     * @param mark  The most recent mark placed; its coordinates determine which row, column,
+     *              and diagonals are checked.
      */
-    public CheckWinnerTask(byte[][] matrix, Mark mark) {
-        this.matrix = matrix;
+    public CheckWinnerTask(byte[][] board, Mark mark) {
+        this.board = board;
         this.mark = mark;
     }
 
@@ -68,12 +68,12 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
      */
     private List<Coordinates> check() {
         Coordinates location = mark.getCoordinates();
-        byte value = matrix[location.getX()][location.getY()];
+        byte value = board[location.getX()][location.getY()];
         List<Coordinates> coordinates = new ArrayList<>();
 
         //check row
-        for (int i = 0; i < matrix[location.getX()].length; i++) {
-            if (matrix[location.getX()][i] == value) {
+        for (int i = 0; i < board[location.getX()].length; i++) {
+            if (board[location.getX()][i] == value) {
                 coordinates.add(new Coordinates(location.getX(), i));
                 if (coordinates.size() == 3) {
                     return coordinates;
@@ -83,8 +83,8 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
 
         //check column
         coordinates.clear();
-        for (int i = 0; i < matrix.length; i++) {
-            if (matrix[i][location.getY()] == value) {
+        for (int i = 0; i < board.length; i++) {
+            if (board[i][location.getY()] == value) {
                 coordinates.add(new Coordinates(i, location.getY()));
                 if (coordinates.size() == 3) {
                     return coordinates;
@@ -94,8 +94,8 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
 
         //check diagonal
         coordinates.clear();
-        for (int i = 0; i < matrix.length; i++) {
-            if (matrix[i][i] == value) {
+        for (int i = 0; i < board.length; i++) {
+            if (board[i][i] == value) {
                 coordinates.add(new Coordinates(i, i));
                 if (coordinates.size() == 3) {
                     return coordinates;
@@ -105,9 +105,9 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
 
         //check reverse diagonal
         coordinates.clear();
-        for (int i = matrix.length - 1; i >= 0; i--) {
-            int lastIndex = matrix.length - 1;
-            if (matrix[lastIndex - i][i] == value) {
+        for (int i = board.length - 1; i >= 0; i--) {
+            int lastIndex = board.length - 1;
+            if (board[lastIndex - i][i] == value) {
                 coordinates.add(new Coordinates(lastIndex - i, i));
                 if (coordinates.size() == 3) {
                     return coordinates;

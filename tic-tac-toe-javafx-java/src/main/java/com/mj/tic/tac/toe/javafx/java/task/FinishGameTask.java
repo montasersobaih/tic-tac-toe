@@ -3,6 +3,8 @@ package com.mj.tic.tac.toe.javafx.java.task;
 import com.mj.tic.tac.toe.javafx.java.util.Coordinates;
 import com.mj.tic.tac.toe.javafx.java.util.ResourceBundleUtil;
 import com.mj.tic.tac.toe.javafx.java.util.Winner;
+import java.util.List;
+import java.util.Objects;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -12,9 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Montaser Jamal
@@ -26,24 +25,32 @@ import java.util.Objects;
 
 public final class FinishGameTask extends Task<Void> {
 
-    /** The winner data (player symbol and winning coordinates), or {@code null} for a draw. */
+    /**
+     * The winner data (player symbol and winning coordinates), or {@code null} for a draw.
+     */
     private final Winner winner;
 
-    /** The pane containing the board's button grid. */
+    /**
+     * The pane containing the board's button grid.
+     */
     private final Pane playAreaPane;
 
-    /** The list view serving as a scoreboard / game history log. */
+    /**
+     * The list view serving as a scoreboard / game history log.
+     */
     private final ListView<String> wins;
 
-    /** The label displaying the total number of games played. */
+    /**
+     * The label displaying the total number of games played.
+     */
     private final Label increaseWinnerLabel;
 
     /**
      * Constructs a new finish-game task.
      *
-     * @param winner             The winner data, or {@code null} if the game ended in a draw.
-     * @param playAreaPane       The pane containing the board buttons.
-     * @param wins               The scoreboard list view to update with the result.
+     * @param winner              The winner data, or {@code null} if the game ended in a draw.
+     * @param playAreaPane        The pane containing the board buttons.
+     * @param wins                The scoreboard list view to update with the result.
      * @param increaseWinnerLabel The label whose numeric value is incremented each game.
      */
     public FinishGameTask(Winner winner, Pane playAreaPane, ListView<String> wins, Label increaseWinnerLabel) {

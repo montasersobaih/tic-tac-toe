@@ -3,7 +3,6 @@ package com.mj.tic.tac.toe.javafx.java.task;
 import com.mj.tic.tac.toe.javafx.java.util.Coordinates;
 import com.mj.tic.tac.toe.javafx.java.util.Mark;
 import com.mj.tic.tac.toe.javafx.java.util.Winner;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,10 +17,14 @@ import java.util.List;
 
 public final class CheckWinnerTask extends BaseTask<Winner> {
 
-    /** The 3×3 game board matrix to inspect. */
+    /**
+     * The 3×3 game board matrix to inspect.
+     */
     private final byte[][] matrix;
 
-    /** The most recent {@link Mark} placed by a player — used as the starting point for win checks. */
+    /**
+     * The most recent {@link Mark} placed by a player — used as the starting point for win checks.
+     */
     private final Mark mark;
 
     /**
@@ -42,7 +45,7 @@ public final class CheckWinnerTask extends BaseTask<Winner> {
      * is returned; otherwise {@code null}.
      *
      * @return A {@link Winner} containing the player symbol and the three winning
-     *         {@link Coordinates}, or {@code null} if there is no winner.
+     * {@link Coordinates}, or {@code null} if there is no winner.
      */
     @Override
     protected Winner call() {

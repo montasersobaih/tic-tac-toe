@@ -1,0 +1,103 @@
+/*
+ * =============================================================================
+ * dialog-bar.css — Dialog title-bar styling
+ *
+ * Styles the top bar (title + close button) used across all modal dialogs
+ * (confirm dialog, difficulty-selection dialog, etc.).
+ *
+ * The dialog bar consists of a horizontal strip containing:
+ *   - A title label on the left.
+ *   - A circular close button on the right, with a custom "X" icon drawn
+ *     via an SVG shape on its inner Region node.
+ *
+ * Dependencies:
+ *   ../../global-config.css  — CSS custom properties (colors, etc.)
+ *   ../../control/label.css  — Base .label styles
+ *   ../../control/button.css — Base .button styles
+ * =============================================================================
+ */
+@import "../../global-config.css";
+@import "../../control/label.css";
+@import "../../control/button.css";
+
+/* ---------------------------------------------------------------------------
+   .dialog-bar — the top bar container
+   A rounded strip at the top of the dialog. The top corners are rounded to
+   match the dialog's border; the bottom corners are square so the bar blends
+   into the body below.
+   --------------------------------------------------------------------------- */
+.dialog-bar {
+    -fx-background-color: -fx-darken-background-color;
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 2 4 2 4;
+}
+
+/* ---------------------------------------------------------------------------
+   .dialog-bar > .label — the title label
+   Renders the dialog's heading text
+   --------------------------------------------------------------------------- */
+.dialog-bar > .label {
+    -fx-font-size: 14;
+}
+
+/* ---------------------------------------------------------------------------
+   .dialog-bar > .button — the close button
+   Sized as a small square (17×17) and made circular via a 25px border-radius.
+   Only the graphic is shown; any text content is hidden (graphic_only).
+   --------------------------------------------------------------------------- */
+.dialog-bar > .button {
+    -fx-min-width: 17;
+    -fx-min-height: 17;
+    -fx-max-width: 17;
+    -fx-max-height: 17;
+
+    -fx-content-display: graphic_only;
+
+    -fx-background-radius: 25;
+}
+
+/* ---------------------------------------------------------------------------
+   .dialog-bar > .button > .jfx-rippler — disable the JFoenix ripple
+   The close button is small; a ripple effect would visually overwhelm it.
+   --------------------------------------------------------------------------- */
+.dialog-bar > .button > .jfx-rippler {
+    -jfx-rippler-fill: none;
+}
+
+/* ---------------------------------------------------------------------------
+   .dialog-bar > .button.close — close button (resting state)
+   A custom looked-up color (-fx-close-button-background-color) is defined and
+   applied so that derived states (hover, pressed) can reference it.
+   --------------------------------------------------------------------------- */
+.dialog-bar > .button.close {
+    -fx-close-button-background-color: #D03334;
+    -fx-background-color: -fx-close-button-background-color;
+}
+
+/* ---------------------------------------------------------------------------
+   .dialog-bar > .button.close:pressed — close button when pressed
+   Lightens the background to provide a pressed-state feedback.
+   --------------------------------------------------------------------------- */
+.dialog-bar > .button.close:pressed {
+    -fx-background-color: derive(-fx-close-button-background-color, 15%);
+}
+
+/* ---------------------------------------------------------------------------
+   .dialog-bar > .button.close:hover > Region,
+   .dialog-bar > .button.close:pressed > Region — the "X" icon
+
+   On hover/pressed, the inner Region (the close icon) is resized from its
+   default (typically smaller) to 7×7 and coloured slightly darker than the
+   button background. Its shape is defined as an SVG path forming a
+   multiplication sign (X), giving a crisp, scalable close icon.
+   --------------------------------------------------------------------------- */
+.dialog-bar > .button.close:hover > Region,
+.dialog-bar > .button.close:pressed > Region {
+    -fx-min-height: 7;
+    -fx-min-width: 7;
+    -fx-max-height: 7;
+    -fx-max-width: 7;
+
+    -fx-background-color: derive(-fx-close-button-background-color, -25%);
+    -fx-shape: "M59.595,52.861L37.094,30.359L59.473,7.98c1.825-1.826,1.825-4.786,0-6.611 c-1.826-1.825-4.785-1.825-6.611,0L30.483,23.748L8.105,1.369c-1.826-1.825-4.785-1.825-6.611,0c-1.826,1.826-1.826,4.786,0,6.611 l22.378,22.379L1.369,52.861c-1.826,1.826-1.826,4.785,0,6.611c0.913,0.913,2.109,1.369,3.306,1.369s2.393-0.456,3.306-1.369 l22.502-22.502l22.501,22.502c0.913,0.913,2.109,1.369,3.306,1.369s2.393-0.456,3.306-1.369 C61.42,57.647,61.42,54.687,59.595,52.861z";
+}

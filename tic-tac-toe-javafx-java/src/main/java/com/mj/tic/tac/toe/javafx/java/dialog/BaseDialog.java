@@ -24,7 +24,7 @@ import javafx.scene.paint.Color;
  *   <li>Is positioned as an overlay inside a given {@link StackPane} container.</li>
  *   <li>Loads its UI layout from a corresponding FXML resource via
  *       {@link #initializeLayout()}.</li>
- *   <li>Receives its controller initialisation callback through
+ *   <li>Receives its controller initialization callback through
  *       {@link #initialize(URL, ResourceBundle)} (part of the
  *       {@link javafx.fxml.Initializable} contract).</li>
  *   <li>Supports dismissing the dialog by pressing the <b>ESCAPE</b> key.</li>
@@ -79,8 +79,8 @@ public abstract class BaseDialog<R extends Pane> extends JFXDialog implements In
      *
      * @param location  the location used to resolve relative paths for the
      *                  root object, or {@code null} if unknown.
-     * @param resources the resources used to localise the root object, or
-     *                  {@code null} if not localised.
+     * @param resources the resources used to localize the root object, or
+     *                  {@code null} if not localized.
      */
     @Override
     public abstract void initialize(URL location, ResourceBundle resources);
@@ -96,9 +96,9 @@ public abstract class BaseDialog<R extends Pane> extends JFXDialog implements In
     protected abstract R initializeLayout();
 
     /**
-     * Sets the background colour of the dialog's parent overlay pane.
+     * Sets the background color of the dialog's parent overlay pane.
      *
-     * @param color the colour to apply; {@link Color#TRANSPARENT} is typical
+     * @param color the color to apply; {@link Color#TRANSPARENT} is typical
      *              for a clean overlay appearance.
      */
     protected void setParentBackground(Color color) {
@@ -109,17 +109,17 @@ public abstract class BaseDialog<R extends Pane> extends JFXDialog implements In
     }
 
     /**
-     * Looks up a localised string by resource key.
+     * Looks up a localized string by resource key.
      *
      * @param key the resource bundle key.
-     * @return the localised string.
+     * @return the localized string.
      */
     protected final String getString(String key) {
         return ResourceBundleUtil.getString(key);
     }
 
     /**
-     * Handles key-pressed events for the dialog. Currently closes the dialog
+     * Handles key-pressed events for the dialog. Currently, closes the dialog
      * when the <b>ESCAPE</b> key is pressed.
      *
      * @param event the key event to process.

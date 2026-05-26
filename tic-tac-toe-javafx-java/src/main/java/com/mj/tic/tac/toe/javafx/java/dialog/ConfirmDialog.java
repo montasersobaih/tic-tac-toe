@@ -14,11 +14,24 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
+ * Confirmation dialog used when the application needs a yes/no decision.
+ *
+ * <p>The dialog returns a {@link Boolean} result through the
+ * {@link BaseDialog#showAndWait()} API inherited from {@link BaseDialog}:
+ * {@code true} means the user confirmed, {@code false} means the user
+ * canceled, and {@code null} means the dialog was closed without choosing
+ * either action.</p>
+ *
+ * <p>Use {@link #showAndWait(StackPane, String)} for the common blocking case where
+ * the caller needs an immediate boolean answer. Use one of the non-blocking
+ * {@code show(...)} overloads when the caller wants to continue immediately
+ * and react through callbacks.</p>
+ *
  * @author Montaser Sobaih
  * @version 1.0
  * @since 13-06-2021
  */
-public final class ConfirmDialog extends BaseDialog<BorderPane> {
+public final class ConfirmDialog extends BaseDialog<BorderPane, Boolean> {
 
     @FXML
     private BorderPane rootPane;
@@ -29,9 +42,15 @@ public final class ConfirmDialog extends BaseDialog<BorderPane> {
     @FXML
     private Label dialogMessage;
 
-    private ButtonListener confirm;
+    /**
+     * Optional callback invoked after the user confirms the dialog.
+     */
+    private Runnable confirm;
 
-    private ButtonListener decline;
+    /**
+     * Optional callback invoked after the user cancels the dialog.
+     */
+    private Runnable cancel;
 
     /**
      * Constructs a confirmation dialog over the given container.
@@ -52,13 +71,18 @@ public final class ConfirmDialog extends BaseDialog<BorderPane> {
      *
      * <p>This is a convenience shorthand for the common case where only a
      * message is needed and the caller wants a boolean result. The dialog
-     * blocks via {@link #showAndWait()}.</p>
+     * blocks via {@link #showAndWait()} until the user confirms, cancels, or
+     * closes the dialog.</p>
+     *
+     * <p>A {@code null} result from {@link #showAndWait()} is converted to
+     * {@code false}, so callers can treat every non-confirming close path as a
+     * declined confirmation.</p>
      *
      * @param container the parent {@link StackPane} for the dialog overlay
      * @param message   the body message to display
      * @return {@code true} if the user confirmed, {@code false} otherwise
      */
-    public static boolean show(StackPane container, String message) {
+    public static boolean showAndWait(StackPane container, String message) {
         Boolean result = builder(container)
                 .setMessage(message)
                 .build()
@@ -67,22 +91,42 @@ public final class ConfirmDialog extends BaseDialog<BorderPane> {
     }
 
     /**
-     * Shows a non-blocking confirmation dialog with a confirm listener.
+     * Shows a non-blocking confirmation dialog with a confirmation callback.
      *
      * <p>The dialog is displayed asynchronously. When the user clicks the
-     * confirm button the supplied {@code listener} is invoked; the decline
-     * button simply closes the dialog.</p>
+     * confirm button the supplied {@code onConfirm} callback is invoked. The
+     * cancel button closes the dialog with a {@code false} result and does not
+     * run a callback in this overload.</p>
      *
      * @param container the parent {@link StackPane} for the dialog overlay
      * @param message   the body message to display
-     * @param listener  the action to run when the user confirms
+     * @param onConfirm the action to run when the user confirms
      */
-    public static void show(StackPane container, String message, ButtonListener listener) {
+    public static void show(StackPane container, String message, Runnable onConfirm) {
+        show(container, message, onConfirm, null);
+    }
+
+    /**
+     * Shows a non-blocking confirmation dialog with confirm and cancel callbacks.
+     *
+     * <p>The dialog is displayed asynchronously. Confirming the dialog stores a
+     * {@code true} result and invokes {@code onConfirm}. Canceling the dialog
+     * stores a {@code false} result and invokes {@code onCancel}. Either
+     * callback may be {@code null} when no action is required for that path.</p>
+     *
+     * @param container the parent {@link StackPane} for the dialog overlay
+     * @param message   the body message to display
+     * @param onConfirm the action to run when the user confirms, or
+     *                  {@code null}
+     * @param onCancel  the action to run when the user cancels, or
+     *                  {@code null}
+     */
+    public static void show(StackPane container, String message, Runnable onConfirm, Runnable onCancel) {
         builder(container)
                 .setMessage(message)
-                .setOnConfirmListener(listener)
-                .build()
-                .show();
+                .setOnConfirmListener(onConfirm)
+                .setOnCancelListener(onCancel)
+                .buildAndShow();
     }
 
     /**
@@ -130,28 +174,28 @@ public final class ConfirmDialog extends BaseDialog<BorderPane> {
      * Handles clicks on cancel button.
      *
      * <p>Closes the dialog with a value of {@code false} and invokes the
-     * decline {@link ButtonListener} if one was registered via the builder.</p>
+     * cancel {@link Runnable} if one was registered via the builder.</p>
      *
-     * @param event the action event from the decline button
+     * @param event the action event from the cancel button
      */
     @FXML
     private void onCancel(ActionEvent event) {
         super.updateValueAndClose(false);
-        Optional.ofNullable(decline).ifPresent(ButtonListener::doAction);
+        Optional.ofNullable(cancel).ifPresent(Runnable::run);
     }
 
     /**
      * Handles clicks on confirm button.
      *
      * <p>Closes the dialog with a value of {@code true} and invokes the
-     * confirm {@link ButtonListener} if one was registered via the builder.</p>
+     * confirmation {@link Runnable} if one was registered via the builder.</p>
      *
      * @param event the action event from the confirm button
      */
     @FXML
     private void onConfirm(ActionEvent event) {
         super.updateValueAndClose(true);
-        Optional.ofNullable(confirm).ifPresent(ButtonListener::doAction);
+        Optional.ofNullable(confirm).ifPresent(Runnable::run);
     }
 
     /*=================================================={Builder}=====================================================*/
@@ -161,7 +205,8 @@ public final class ConfirmDialog extends BaseDialog<BorderPane> {
      *
      * <p>Use {@link ConfirmDialog#builder(StackPane)} to obtain an instance,
      * chain configuration calls, and call {@link #build()} to retrieve the
-     * configured dialog.</p>
+     * configured dialog. Call {@link #buildAndShow()} when the dialog should be
+     * displayed immediately without keeping a reference to it.</p>
      */
     public static class Builder {
 
@@ -183,24 +228,24 @@ public final class ConfirmDialog extends BaseDialog<BorderPane> {
         }
 
         /**
-         * Registers a listener to be invoked when the user clicks confirm button.
+         * Registers a callback to run when the user clicks the confirm button.
          *
-         * @param listener the action to run on confirmation
+         * @param confirmation the action to run on confirmation
          * @return this builder for chaining
          */
-        public Builder setOnConfirmListener(ButtonListener listener) {
-            dialog.confirm = listener;
+        public Builder setOnConfirmListener(Runnable confirmation) {
+            dialog.confirm = confirmation;
             return this;
         }
 
         /**
-         * Registers a listener to be invoked when the user clicks cancel button.
+         * Registers a callback to run when the user clicks the cancel button.
          *
-         * @param listener the action to run on decline
+         * @param cancellation the action to run on cancellation
          * @return this builder for chaining
          */
-        public Builder setOnDeclineListener(ButtonListener listener) {
-            dialog.decline = listener;
+        public Builder setOnCancelListener(Runnable cancellation) {
+            dialog.cancel = cancellation;
             return this;
         }
 
@@ -212,23 +257,17 @@ public final class ConfirmDialog extends BaseDialog<BorderPane> {
         public ConfirmDialog build() {
             return dialog;
         }
-    }
-
-    /*================================================{Inner classes}=================================================*/
-
-    /**
-     * Functional interface for dialog action callbacks.
-     *
-     * <p>Used by {@link ConfirmDialog} to notify listeners when the user
-     * confirms or declines. Unlike {@link Runnable}, this is a dedicated
-     * type that makes the intent explicit at the call site and improves
-     * readability of builder chains.</p>
-     */
-    public interface ButtonListener {
 
         /**
-         * Performs the action associated with the button click.
+         * Builds the configured dialog and shows it immediately.
+         *
+         * <p>This is a convenience method for non-blocking usage. It delegates
+         * to {@link #build()} and then calls the inherited
+         * {@link com.jfoenix.controls.JFXDialog#show()} method on the
+         * resulting dialog instance.</p>
          */
-        void doAction();
+        public void buildAndShow() {
+            build().show();
+        }
     }
 }

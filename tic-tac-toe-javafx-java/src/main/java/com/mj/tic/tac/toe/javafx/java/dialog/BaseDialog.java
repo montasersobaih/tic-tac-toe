@@ -5,6 +5,10 @@ import com.jfoenix.controls.events.JFXDialogEvent;
 import com.mj.tic.tac.toe.javafx.java.util.ResourceBundleUtil;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -28,6 +32,8 @@ import javafx.scene.paint.Color;
  *       {@link #initialize(URL, ResourceBundle)} (part of the
  *       {@link javafx.fxml.Initializable} contract).</li>
  *   <li>Supports dismissing the dialog by pressing the <b>ESCAPE</b> key.</li>
+ *   <li>Can return a strongly typed result value when shown through
+ *       {@link #showAndWait()}.</li>
  * </ul>
  *
  * <h3>Subclassing contract</h3>
@@ -41,17 +47,41 @@ import javafx.scene.paint.Color;
  *       {@link #initializeLayout()} internally — therefore subclass
  *       fields referenced inside that method must be initialised
  *       <em>before</em> the super-constructor invocation is complete.</li>
+ *   <li>Use {@link #updateValueAndClose(Object)} when the user completes the
+ *       dialog with a value, for example by pressing a confirm or selection
+ *       button.</li>
  * </ol>
+ *
+ * <h3>Result handling</h3>
+ * The {@code V} type parameter represents the value produced by the dialog.
+ * For example, a confirmation dialog can use {@link Boolean}, while a
+ * difficulty-selection dialog can use a domain enum. Calling
+ * {@link #showAndWait()} displays the dialog and enters a nested JavaFX event
+ * loop until the dialog is closed. UI events continue to be processed while
+ * the caller waits for the result.
+ *
+ * <p>If the dialog is closed without calling {@link #updateValueAndClose(Object)}
+ * first, the result is {@code null}.</p>
  *
  * @param <R> the type of the root pane loaded from FXML (typically
  *            {@link javafx.scene.layout.BorderPane}).
+ * @param <V> the type of result value returned by {@link #showAndWait()}.
  * @author Montaser Sbaih
  * @version 1.0
  * @email montaser.jjs@gmail.com
  * @phone +962-786258874
  * @since 15-10-2022
  */
-public abstract class BaseDialog<R extends Pane> extends JFXDialog implements Initializable {
+public abstract class BaseDialog<R extends Pane, V> extends JFXDialog implements Initializable {
+
+    /**
+     * Stores the result value produced by the dialog.
+     *
+     * <p>The value is set by {@link #updateValueAndClose(Object)} before the
+     * dialog is closed. {@link #showAndWait()} reads this property when the
+     * {@link JFXDialogEvent#CLOSED} event exits the nested event loop.</p>
+     */
+    private final ObjectProperty<V> dialogValue = new SimpleObjectProperty<>();
 
     /**
      * Constructs a new modal dialog over the given container.
@@ -127,6 +157,78 @@ public abstract class BaseDialog<R extends Pane> extends JFXDialog implements In
     protected void onDialogKeyPressed(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ESCAPE)) {
             this.close();
+        }
+    }
+
+    /**
+     * Returns the current dialog result value.
+     *
+     * <p>This is mainly useful for subclasses or close handlers that need to
+     * inspect the value after a user action. A {@code null} value means either
+     * no result has been set yet, or the dialog was closed through a path such
+     * as ESCAPE or the close button.</p>
+     *
+     * @return the current result value, possibly {@code null}
+     */
+    protected V getDialogValue() {
+        return dialogValue.get();
+    }
+
+    /**
+     * Stores the dialog result and closes the dialog.
+     *
+     * <p>Call this from concrete dialog actions when the user completes the
+     * dialog with a meaningful result. Examples include confirming a yes/no
+     * dialog or choosing an item from a selection dialog.</p>
+     *
+     * <p>The close operation is safe to request from any thread. If this method
+     * is called from the JavaFX Application Thread, the dialog is closed
+     * immediately. Otherwise, the close request is queued with
+     * {@link Platform#runLater(Runnable)}.</p>
+     *
+     * @param value the result value to return from {@link #showAndWait()}
+     */
+    protected void updateValueAndClose(V value) {
+        dialogValue.set(value);
+
+        if (Platform.isFxApplicationThread()) {
+            super.close();
+        } else {
+            Platform.runLater(super::close);
+        }
+    }
+
+    /**
+     * Shows the dialog and blocks until it is closed.
+     *
+     * <p>{@link JFXDialog} does not provide a blocking result API, so this
+     * method implements one with {@link Platform#enterNestedEventLoop(Object)}.
+     * The method must be called from the JavaFX Application Thread. While it is
+     * waiting, JavaFX continues to process UI events, allowing the user to
+     * interact with the dialog normally.</p>
+     *
+     * <p>The nested event loop exits when the dialog fires
+     * {@link JFXDialogEvent#CLOSED}. The returned value is whatever was last
+     * passed to {@link #updateValueAndClose(Object)}, or {@code null} if the
+     * dialog closed without a stored result.</p>
+     *
+     * @return the dialog result, or {@code null} if no result was provided
+     * @throws IllegalStateException if called from outside the JavaFX
+     *                               Application Thread
+     */
+    @SuppressWarnings("unchecked")
+    public V showAndWait() {
+        if (!Platform.isFxApplicationThread()) {
+            throw new IllegalStateException("showAndWait() must be called from the JavaFX Application Thread.");
+        }
+
+        EventHandler<JFXDialogEvent> handler = event -> Platform.exitNestedEventLoop(BaseDialog.this, dialogValue.get());
+        super.addEventHandler(JFXDialogEvent.CLOSED, handler);
+        try {
+            super.show();
+            return (V) Platform.enterNestedEventLoop(this);
+        } finally {
+            super.removeEventHandler(JFXDialogEvent.CLOSED, handler);
         }
     }
 }

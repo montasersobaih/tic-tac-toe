@@ -1,6 +1,7 @@
 package com.mj.tic.tac.toe.javafx.java.dialog;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.events.JFXDialogEvent;
 import com.mj.tic.tac.toe.javafx.java.constant.DInterface;
 import com.mj.tic.tac.toe.javafx.java.util.Difficulty;
 import com.mj.tic.tac.toe.javafx.java.util.FXMLUtil;
@@ -9,7 +10,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,80 +19,61 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
- * A modal dialog that presents the player with a choice of difficulty levels
- * (Easy, Medium, Hard) before starting a new game.
+ * Dialog used to let the player choose the computer difficulty.
  *
- * <p>The dialog is displayed as an overlay on top of the provided
- * {@link StackPane} container. It supports two interaction models:</p>
+ * <p>The dialog is backed by {@code difficulty_dialog.fxml}. Each difficulty
+ * button stores a {@link Difficulty} value in its JavaFX {@code userData};
+ * when the user clicks a button, that value is extracted, stored as the dialog
+ * result, and passed to the optional selection callback.</p>
  *
- * <ul>
- *   <li><b>Callback (async):</b> Register a listener via
- *       {@link Builder#setOnDifficultyChosenListener(Consumer)} and call
- *       {@link #show()} — the listener receives the chosen
- *       {@link Difficulty} when the user clicks a difficulty button.</li>
- *   <li><b>Blocking (sync):</b> Call {@link #showAndWait()} to block the
- *       calling thread (via a JavaFX nested event loop) until the user makes
- *       a selection, then receive the {@link Difficulty} directly.</li>
- * </ul>
+ * <p>The dialog result type is {@link Difficulty}, inherited from
+ * {@link BaseDialog}. A selected difficulty is stored through
+ * {@link #updateValueAndClose(Object)}. If the user closes the dialog with the
+ * close button, ESCAPE key, or another no-selection path, the result remains
+ * {@code null}.</p>
  *
- * <p>The dialog is built through its {@link Builder}, which is obtained via
- * {@link #getInstance(StackPane)}:
- * <pre>{@code
- * DifficultyDialog.getInstance(container)
- *     .setOnDifficultyChosenListener(difficulty -> { ... })
- *     .build()
- *     .show();
- * }</pre>
+ * <p>Use {@link #showAndWait(StackPane)} when the caller needs a blocking
+ * result. Use {@link #show(StackPane, Consumer)} or {@link #builder(StackPane)}
+ * for non-blocking selection flows.</p>
  *
- * <p>For the common case where no callback is needed, use the static
- * convenience method {@link #showAndWait(StackPane)}:
- * <pre>{@code
- * Difficulty difficulty = DifficultyDialog.showAndWait(container);
- * }</pre>
- *
- * @author Montaser Sobaih
+ * @author Montaser Sbaih
  * @version 1.0
+ * @email montaser.jjs@gmail.com
+ * @phone +962-786258874
  * @since 13-06-2021
  */
-public final class DifficultyDialog extends BaseDialog<BorderPane> {
+public final class DifficultyDialog extends BaseDialog<BorderPane, Difficulty> {
 
     /**
-     * The root layout loaded from the FXML resource. Houses the dialog's title
-     * label and the three difficulty choice buttons.
+     * Root pane loaded from {@code difficulty_dialog.fxml}.
      */
     @FXML
     private BorderPane rootPane;
 
     /**
-     * The label that displays the dialog's heading text (e.g. "Choose Difficulty").
-     * Bound via the FXML file's {@code fx:id}.
+     * Localized dialog title label.
      */
     @FXML
-    private Label title;
+    private Label dialogTitle;
 
     /**
-     * The close button that dismisses the dialog. Injected by the FXMLLoader
-     * via the {@code fx:id} attribute in the FXML file.
+     * Button that closes the dialog without selecting a difficulty.
      */
     @FXML
     private JFXButton closeButton;
 
     /**
-     * An optional callback invoked when the user selects a difficulty level.
-     * Set via {@link Builder#setOnDifficultyChosenListener(Consumer)}. If no
-     * listener is registered, the selected difficulty is still returned through
-     * the blocking {@link #showAndWait()} path via the nested event loop.
+     * Optional callback invoked after the user chooses a difficulty.
      */
-    private Consumer<Difficulty> consumer;
+    private Consumer<Difficulty> onDifficultyChosen;
 
     /**
-     * Constructs a new difficulty-selection dialog over the given container.
-     * <p>
-     * The dialog's parent overlay background is set to transparent and the
-     * transition type is {@link DialogTransition#CENTER} (scale-in animation).
-     * </p>
+     * Constructs a difficulty dialog over the given container.
      *
-     * @param container the parent {@link StackPane} that hosts the dialog overlay.
+     * <p>The dialog uses a transparent parent overlay background and a centered
+     * JFoenix transition.</p>
+     *
+     * @param container the parent {@link StackPane} that hosts the dialog overlay
      */
     private DifficultyDialog(StackPane container) {
         super(container);
@@ -101,44 +82,60 @@ public final class DifficultyDialog extends BaseDialog<BorderPane> {
     }
 
     /**
-     * Creates a new {@link Builder} for constructing a {@code DifficultyDialog}
-     * over the given container pane.
+     * Shows a blocking difficulty selection dialog.
      *
-     * @param container the parent {@link StackPane} that hosts the dialog overlay.
-     * @return a new {@link Builder} instance.
+     * <p>This method delegates to {@link BaseDialog#showAndWait()} and returns
+     * the selected {@link Difficulty}. If the user closes the dialog without
+     * selecting a difficulty, the result is {@code null}.</p>
+     *
+     * @param container the parent {@link StackPane} for the dialog overlay
+     * @return the selected difficulty, or {@code null} if the dialog closed
+     * without a selection
      */
-    public static Builder getInstance(StackPane container) {
+    public static Difficulty showAndWait(StackPane container) {
+        return getInstance(container).showAndWait();
+    }
+
+    /**
+     * Shows a non-blocking difficulty selection dialog.
+     *
+     * <p>The method builds and shows the dialog immediately. When the user
+     * selects a difficulty, the selected {@link Difficulty} is stored as the
+     * dialog result, the dialog is closed, and the supplied {@code consumer} is
+     * invoked on the JavaFX Application Thread. Closing the dialog without a
+     * selection does not invoke the consumer.</p>
+     *
+     * @param container the parent {@link StackPane} for the dialog overlay
+     * @param consumer  invoked with the chosen difficulty, or {@code null} if
+     *                  no callback is needed
+     */
+    public static void show(StackPane container, Consumer<Difficulty> consumer) {
+        builder(container).setOnDifficultyChosenListener(consumer).buildAndShow();
+    }
+
+    public static DifficultyDialog getInstance(StackPane container) {
+        return builder(container).build();
+    }
+
+    /**
+     * Creates a new builder for a difficulty dialog hosted by the given pane.
+     *
+     * @param container the parent {@link StackPane} that hosts the dialog overlay
+     * @return a builder wrapping a new {@code DifficultyDialog}
+     */
+    public static Builder builder(StackPane container) {
         return new Builder(new DifficultyDialog(container));
     }
 
     /**
-     * Static convenience method that creates, shows, and waits for the
-     * difficulty dialog in a single call.
+     * Initializes controller state after FXML loading.
      *
-     * <p>Equivalent to:
-     * <pre>{@code
-     * DifficultyDialog.getInstance(container).build().showAndWait()
-     * }</pre>
+     * <p>The close button is wired here because it is injected from FXML. The
+     * close action dismisses the dialog without setting a {@link Difficulty}
+     * result.</p>
      *
-     * @param container the parent {@link StackPane} that hosts the dialog overlay.
-     * @return the chosen {@link Difficulty}, or {@code null} if the dialog
-     * was closed without a selection.
-     */
-    public static Difficulty showAndWait(StackPane container) {
-        return getInstance(container).build().showAndWait();
-    }
-
-    /**
-     * Initializes the dialog after its FXML content has been loaded.
-     * <p>
-     * Wires the close button (injected via {@code fx:id="closeButton"}) to
-     * dismiss the dialog when clicked.
-     * </p>
-     *
-     * @param location  the location used to resolve relative paths for the root
-     *                  object, or {@code null} if not available.
-     * @param resources the resources used to localize the root object, or
-     *                  {@code null} if not localized.
+     * @param location  the FXML location, or {@code null} if unavailable
+     * @param resources the resource bundle used by the FXML, or {@code null}
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -146,19 +143,14 @@ public final class DifficultyDialog extends BaseDialog<BorderPane> {
     }
 
     /**
-     * Loads the difficulty-dialog layout from its FXML resource and returns
-     * the root {@link BorderPane}.
-     * <p>
-     * This method is called from the {@link BaseDialog} super-constructor, so
-     * no instance state may be relied upon beyond what was established before
-     * {@code super(container)} completed. The controller is explicitly set on
-     * the FXML loader to bypass any {@code fx:controller} attribute in the
-     * FXML file, ensuring this instance handles all UI events.
-     * </p>
+     * Loads the FXML layout for the difficulty dialog.
      *
-     * @return the root {@link BorderPane} loaded from
-     * {@link DInterface#DIFFICULTY_DIALOG}, or {@code null} if loading
-     * failed.
+     * <p>The loader is created from {@link DInterface#DIFFICULTY_DIALOG}, this
+     * dialog instance is registered as the controller, and the loaded root is
+     * cast to {@link BorderPane}.</p>
+     *
+     * @return the loaded dialog root pane, or {@code null} if FXML loading
+     * fails
      */
     @Override
     protected BorderPane initializeLayout() {
@@ -172,45 +164,17 @@ public final class DifficultyDialog extends BaseDialog<BorderPane> {
     }
 
     /**
-     * Shows the dialog and blocks the calling thread (via a JavaFX nested
-     * event loop) until a difficulty is chosen or the dialog is dismissed.
+     * Handles a click on one of the difficulty buttons.
      *
-     * <p>This method must be called from the JavaFX Application Thread.
-     * Unlike the callback-based {@link #show()}, it returns the selected
-     * {@link Difficulty} directly.</p>
+     * <p>The handler expects the event source to be a {@link Button} whose
+     * {@code userData} is a {@link Difficulty}. That value is stored as the
+     * dialog result via {@link BaseDialog#updateValueAndClose(Object)} and then forwarded
+     * to the optional selection callback.</p>
      *
-     * @return the chosen {@link Difficulty}, or {@code null} if the dialog
-     * was closed without a selection.
-     */
-    public Difficulty showAndWait() {
-        super.show();
-        return (Difficulty) Platform.enterNestedEventLoop(this);
-    }
-
-    /**
-     * Handles clicks on any of the three difficulty buttons (Easy / Medium / Hard).
-     * <p>
-     * Closes the dialog, extracts the chosen {@link Difficulty} from the
-     * clicked button's {@link Button#getUserData() user-data}, then:
-     * </p>
-     * <ol>
-     *   <li>Invokes the optional callback consumer, if one was registered via
-     *       the builder.</li>
-     *   <li>Exits the nested event loop (unblocking {@link #showAndWait()})
-     *       with the selected difficulty as the result.</li>
-     * </ol>
-     * <p>
-     * Each difficulty button in the FXML is expected to have its
-     * {@code userData} attribute set to the corresponding {@link Difficulty}
-     * enum constant.
-     * </p>
-     *
-     * @param event the action event fired by the clicked {@link Button}.
+     * @param event the action event fired by the selected difficulty button
      */
     @FXML
     private void onDifficultyChosen(ActionEvent event) {
-        this.close();
-
         Difficulty difficulty = Optional.of(event)
                 .map(ActionEvent::getSource)
                 .map(Button.class::cast)
@@ -218,62 +182,83 @@ public final class DifficultyDialog extends BaseDialog<BorderPane> {
                 .map(Difficulty.class::cast)
                 .orElse(null);
 
-        Optional.ofNullable(consumer).ifPresent(c -> c.accept(difficulty));
-        Platform.exitNestedEventLoop(this, difficulty);
+        super.updateValueAndClose(difficulty);
+        Optional.ofNullable(onDifficultyChosen).ifPresent(c -> c.accept(difficulty));
     }
 
     /*==============================================={inner classes}==================================================*/
 
     /**
-     * Builder for constructing a configured {@link DifficultyDialog} instance.
-     * <p>
-     * Obtain a builder via {@link #getInstance(StackPane)}, optionally register
-     * a callback with {@link #setOnDifficultyChosenListener(Consumer)}, and
-     * call {@link #build()} to retrieve the fully configured dialog.
-     * </p>
+     * Builder for configuring and showing a {@link DifficultyDialog}.
      *
-     * <pre>{@code
-     * DifficultyDialog.getInstance(container)
-     *     .setOnDifficultyChosenListener(difficulty -> { ... })
-     *     .build()
-     *     .show();
-     * }</pre>
+     * <p>Use {@link DifficultyDialog#builder(StackPane)} to create a builder,
+     * register callbacks, and then call {@link #build()} or
+     * {@link #buildAndShow()}.</p>
      */
     public static class Builder {
 
         /**
-         * The dialog instance being configured.
+         * Dialog instance being configured by this builder.
          */
         private final DifficultyDialog dialog;
 
         /**
-         * Creates a new builder wrapping the given dialog.
+         * Creates a builder around an already constructed dialog.
          *
-         * @param dialog the (not yet configured) dialog instance to build upon.
+         * @param dialog the dialog instance to configure
          */
         private Builder(DifficultyDialog dialog) {
             this.dialog = dialog;
         }
 
         /**
-         * Registers a callback to receive the chosen {@link Difficulty} when
-         * the user clicks a difficulty button.
+         * Registers a callback to run when the user selects a difficulty.
          *
-         * @param listener the consumer to invoke with the selected difficulty.
-         * @return this builder for chaining.
+         * <p>The callback receives the selected {@link Difficulty}. It is not
+         * invoked when the dialog is closed without a selection.</p>
+         *
+         * @param callback callback invoked with the selected difficulty, or
+         *                 {@code null}
+         * @return this builder for chaining
          */
-        public Builder setOnDifficultyChosenListener(Consumer<Difficulty> listener) {
-            dialog.consumer = listener;
+        public Builder setOnDifficultyChosenListener(Consumer<Difficulty> callback) {
+            dialog.onDifficultyChosen = callback;
             return this;
         }
 
         /**
-         * Returns the fully-configured {@link DifficultyDialog}.
+         * Registers a callback to run after the dialog is closed.
          *
-         * @return the built dialog instance.
+         * <p>The callback is invoked whenever the dialog finishes closing,
+         * whether it was closed by a difficulty selection, the close button, the
+         * ESCAPE key, or another close path.</p>
+         *
+         * @param callback action to run after the dialog closes
+         * @return this builder for chaining
+         */
+        public Builder setOnDialogClosed(Runnable callback) {
+            dialog.addEventHandler(JFXDialogEvent.CLOSED, event -> callback.run());
+            return this;
+        }
+
+        /**
+         * Returns the configured dialog without showing it.
+         *
+         * @return the configured {@link DifficultyDialog}
          */
         public DifficultyDialog build() {
             return dialog;
+        }
+
+        /**
+         * Builds the configured dialog and shows it immediately.
+         *
+         * <p>This is the convenience path for non-blocking usage. It delegates
+         * to {@link #build()} and then calls the inherited
+         * {@link com.jfoenix.controls.JFXDialog#show()} method on the result.</p>
+         */
+        public void buildAndShow() {
+            build().show();
         }
     }
 }

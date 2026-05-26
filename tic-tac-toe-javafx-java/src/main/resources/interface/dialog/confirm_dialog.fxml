@@ -26,8 +26,8 @@
     </center>
     <bottom>
         <HBox alignment="CENTER_RIGHT">
-            <JFXButton onAction="#onCancel" text="%control.button.no"/>
-            <JFXButton onAction="#onConfirm" text="%control.button.yes"/>
+            <JFXButton onAction="#onCancel" text="%control.button.no" cancelButton="true"/>
+            <JFXButton onAction="#onConfirm" text="%control.button.yes" defaultButton="true"/>
         </HBox>
     </bottom>
 </BorderPane>

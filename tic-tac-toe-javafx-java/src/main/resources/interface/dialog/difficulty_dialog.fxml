@@ -10,12 +10,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <BorderPane fx:id="rootPane" minHeight="-Infinity" minWidth="-Infinity" styleClass="pane"
-            stylesheets="@../../assist/css/interface/dialog/difficulty-dialog.css" xmlns="http://javafx.com/javafx/26"
-            xmlns:fx="http://javafx.com/fxml/1">
+            stylesheets="@../../assist/css/interface/dialog/difficulty-dialog.css"
+            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
     <top>
         <StackPane styleClass="dialog-bar" BorderPane.alignment="CENTER">
             <children>
-                <Label fx:id="title" styleClass="title" text="%control.label.title.difficulty"/>
+                <Label fx:id="dialogTitle" styleClass="title" text="%control.label.title.difficulty"/>
                 <JFXButton fx:id="closeButton" styleClass="close" StackPane.alignment="CENTER_RIGHT"/>
             </children>
         </StackPane>

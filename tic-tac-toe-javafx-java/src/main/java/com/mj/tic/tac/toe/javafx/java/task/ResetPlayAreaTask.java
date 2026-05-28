@@ -1,6 +1,6 @@
 package com.mj.tic.tac.toe.javafx.java.task;
 
-import java.util.Arrays;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
@@ -39,21 +39,24 @@ public final class ResetPlayAreaTask extends BaseTask<Void> {
     }
 
     /**
-     * Executed on a background thread. Fills every cell of the board with 0, then
-     * iterates over all child nodes of the play-area pane to reset each button's text,
-     * disabled state, and winner pseudo-class on the JavaFX Application Thread.
+     * Clears each board cell on the background task thread and schedules the
+     * matching play-area button to be restored on the JavaFX Application Thread.
+     * The button lookup assumes a square board whose buttons are stored in
+     * row-major order in {@code playAreaPane.getChildren()}.
      *
-     * @return Always {@code null} (the result is communicated via UI side effects).
+     * @return Always {@code null}; this task updates the board and UI by side effect.
      */
     @Override
     protected Void call() {
-        for (byte[] line : board) {
-            Arrays.fill(line, (byte) 0);
-        }
+        List<Node> buttons = playAreaPane.getChildren();
 
-        for (Node node : playAreaPane.getChildren()) {
-            Button button = (Button) node;
-            Platform.runLater(() -> this.resetButton(button));
+        var bLength = board.length;
+        for (int i = 0; i < bLength; i++) {
+            for (int j = 0; j < bLength; j++) {
+                board[i][j] = (byte) 0;
+                Button button = (Button) buttons.get(i * bLength + j);
+                Platform.runLater(() -> this.resetButton(button));
+            }
         }
 
         return null;

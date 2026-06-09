@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -168,6 +170,27 @@ public final class ConfirmDialog extends BaseDialog<BorderPane, Boolean> {
                 .findFirst()
                 .map(BorderPane.class::cast)
                 .orElse(null);
+    }
+
+    /**
+     * Handles key press events when the dialog is focused.
+     *
+     * <p>Pressing the {@link KeyCode#ESCAPE ESCAPE} key is treated as a
+     * cancellation request &mdash; the dialog closes with a value of
+     * {@code false} and triggers the cancel callback, if one was registered.
+     * All other key events are silently ignored.</p>
+     *
+     * <p>This implementation converts the key event into an
+     * {@link ActionEvent} and delegates to {@link #onCancel(ActionEvent)} to
+     * avoid duplicating the close-and-notify logic.</p>
+     *
+     * @param event the key event that occurred while the dialog has focus
+     */
+    @Override
+    protected void onDialogKeyPressed(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ESCAPE)) {
+            this.onCancel(new ActionEvent(event, this));
+        }
     }
 
     /**

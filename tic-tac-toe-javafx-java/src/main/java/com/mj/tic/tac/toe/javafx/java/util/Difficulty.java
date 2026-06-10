@@ -32,24 +32,33 @@ public enum Difficulty {
     /**
      * Resource-bundle key for the localized display name of this difficulty.
      */
-    private final String text;
+    private final String resourceKey;
 
     /**
      * Constructs a difficulty level constant.
      *
-     * @param text the resource-bundle key used to look up the localized label.
+     * @param resourceKey the resource-bundle key used to look up the localized label.
      */
-    Difficulty(String text) {
-        this.text = text;
+    Difficulty(String resourceKey) {
+        this.resourceKey = resourceKey;
     }
 
     /**
-     * Returns the resource-bundle key for this difficulty's localized label.
+     * Returns the resource-bundle key used to look up this difficulty's localized label.
+     *
+     * @return the resource-bundle key (e.g. {@code "control.label.difficulty.easy"}).
+     */
+    public String getResourceKey() {
+        return resourceKey;
+    }
+
+    /**
+     * Returns the resource-bundle key for this difficulty's localized display name.
      *
      * @return the resource-bundle key (e.g. {@code "control.label.difficulty.easy"}).
      */
     @Override
     public String toString() {
-        return this.text;
+        return this.resourceKey;
     }
 }

@@ -22,7 +22,7 @@ import lombok.Data;
 @AllArgsConstructor
 public final class Mark {
 
-    private final char value;
+    private final char symbol;
 
     private final Coordinates coordinates;
 }

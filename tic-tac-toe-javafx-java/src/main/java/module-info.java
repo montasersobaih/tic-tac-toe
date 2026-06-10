@@ -6,6 +6,7 @@ module tic.tac.toe.javafx.java {
     requires lombok;
 
     opens com.mj.tic.tac.toe.javafx.java to javafx.graphics;
+    opens com.mj.tic.tac.toe.javafx.java.util to javafx.fxml;
     opens com.mj.tic.tac.toe.javafx.java.dialog to javafx.fxml;
     opens com.mj.tic.tac.toe.javafx.java.controller to javafx.fxml;
     opens com.mj.tic.tac.toe.javafx.java.controller.view to javafx.fxml;

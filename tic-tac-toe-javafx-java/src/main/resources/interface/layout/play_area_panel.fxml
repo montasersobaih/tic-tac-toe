@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  =============================================================================
+  play_area_panel.fxml — Tic-Tac-Toe game board layout
+
+  Defines the 3×3 tic-tac-toe board as a GridPane of nine clickable JFXButton
+  cells. The board is initially disabled (disable="true"); it becomes enabled
+  once the user selects an AI difficulty level from the dialog.
+
+  Cell layout:
+    Row 0: [0,0] top-left   [1,0] top-center   [2,0] top-right
+    Row 1: [0,1] middle-left [1,1] center       [2,1] middle-right
+    Row 2: [0,2] bottom-left [1,2] bottom-center [2,2] bottom-right
+
+  Corner cells (top-left, top-right, bottom-left, bottom-right) have CSS
+  style classes applied so the board's outer corners follow the rounded shape
+  of the surrounding container.
+
+  Controller: PlayAreaPanelController
+  CSS:        play-area-panel.css
+  =============================================================================
+-->
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" disable="true" maxHeight="1.7976931348623157E308"
+          maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="400.0"
+          styleClass="play-area-panel-root-pane" stylesheets="@../../assist/css/interface/layout/play-area-panel.css"
+          xmlns="http://javafx.com/javafx/26"
+          fx:controller="com.mj.tic.tac.toe.javafx.java.controller.layout.PlayAreaPanelController">
+    <!-- Three equal-width columns -->
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <!-- Three equal-height rows -->
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <!-- Row 0 -->
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" styleClass="top-left" GridPane.columnIndex="0"
+               GridPane.rowIndex="0"/>
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" styleClass="top-right" GridPane.columnIndex="2"
+               GridPane.rowIndex="0"/>
+    <!-- Row 1 -->
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <!-- Row 2 -->
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" styleClass="bottom-left" GridPane.columnIndex="0"
+               GridPane.rowIndex="2"/>
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <JFXButton mnemonicParsing="false" onMouseClicked="#onCellClicked" styleClass="bottom-right"
+               GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+</GridPane>

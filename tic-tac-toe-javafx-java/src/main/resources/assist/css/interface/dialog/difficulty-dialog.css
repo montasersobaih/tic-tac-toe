@@ -1,0 +1,94 @@
+/*
+ * =============================================================================
+ * difficulty-dialog.css — Difficulty-selection dialog styling
+ *
+ * Styles the modal dialog that lets the player choose an AI difficulty level
+ * (Easy / Medium / Hard) before starting a new game.
+ *
+ * Layout structure (from difficulty_dialog.fxml):
+ *   BorderPane.pane            — root container with fixed size, border, rounded corners
+ *   └── StackPane.dialog-bar   — top bar (title + close button) — styled by dialog-bar.css
+ *   └── StackPane.body         — centre area housing the three choice buttons
+ *       └── GridPane
+ *           ├── JFXButton.top     — "Easy"   (rounded top corners)
+ *           ├── JFXButton.middle  — "Medium" (no corner rounding)
+ *           └── JFXButton.bottom  — "Hard"   (rounded bottom corners)
+ *
+ * Dependencies:
+ *   ../../global-config.css           — CSS custom properties (colours)
+ *   ../../control/label.css           — Base .label styles
+ *   ../../control/button.css          — Base .button styles
+ *   ../../control/padded-dialog.css   — Shared .pane padding
+ *   ../../interface/layout/dialog-bar.css — Dialog title-bar styles
+ * =============================================================================
+ */
+@import "../../global-config.css";
+@import "../../control/label.css";
+@import "../../control/button.css";
+@import "../../control/padded-dialog.css";
+@import "../../interface/layout/dialog-bar.css";
+
+/* ---------------------------------------------------------------------------
+   .pane — root dialog container
+   A fixed 220×220 panel with:
+     - Rounded background (18px) in the darker dialog colour.
+     - A 2px border in the default (text) colour, inset slightly from the
+       background edge (12px border-radius vs 18px background-radius) to
+       create a painted-border effect.
+     - Zero internal padding — spacing is delegated to child regions.
+   --------------------------------------------------------------------------- */
+.pane {
+    -fx-pref-width: 220;
+    -fx-pref-height: 220;
+
+    -fx-background-radius: 18;
+    -fx-background-color: -fx-darken-background-color;
+
+    -fx-border-color: -fx-default-color;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+
+    -fx-padding: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   .pane > .body — centre content area
+   A stacked background with two layers:
+     1. Outer inset (-3) — fills behind the border with the default background.
+     2. Inner inset (1)  — the darker colour, creating a subtle bevel.
+   The combined background-radius (10,12) rounds the top more aggressively so
+   the body blends smoothly into the rounded dialog-bar above.
+   --------------------------------------------------------------------------- */
+.pane > .body {
+    -fx-background-color: -fx-default-background-color, -fx-darken-background-color;
+    -fx-background-radius: 10 10 12 12, 10;
+    -fx-background-insets: -3, 1;
+
+    -fx-padding: 4;
+}
+
+/* ---------------------------------------------------------------------------
+   .pane > .body > * > .top — first difficulty button ("Easy")
+   Rounded at the top to match the body's upper curve; nearly square at the
+   bottom so it sits flush against the middle button.
+   --------------------------------------------------------------------------- */
+.pane > .body > * > .top {
+    -fx-background-radius: 7 7 2 2;
+}
+
+/* ---------------------------------------------------------------------------
+   .pane > .body > * > .middle — middle difficulty button ("Medium")
+   Uniformly slight rounding so it blends seamlessly between top and bottom.
+   --------------------------------------------------------------------------- */
+.pane > .body > * > .middle {
+    -fx-background-radius: 2;
+}
+
+/* ---------------------------------------------------------------------------
+   .pane > .body > * > .bottom — last difficulty button ("Hard")
+   Square at the top (flush against middle) and rounded at the bottom to
+   match the body's lower curve.
+   --------------------------------------------------------------------------- */
+.pane > .body > * > .bottom {
+    -fx-background-radius: 2 2 7 7;
+}

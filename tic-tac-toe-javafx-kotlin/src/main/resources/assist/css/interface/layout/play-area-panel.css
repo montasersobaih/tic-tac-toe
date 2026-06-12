@@ -1,0 +1,130 @@
+/*
+ * =============================================================================
+ * play-area-panel.css — Tic-tac-toe board styling
+ *
+ * Styles the central play area that renders the 3×3 tic-tac-toe board.
+ *
+ * The play area is built from a GridPane-like root container containing nine
+ * square buttons. Each button represents one board cell and displays the
+ * player's mark as styled text.
+ *
+ * The panel provides:
+ *   - A layered rounded backdrop that frames the board.
+ *   - Consistent spacing between board cells.
+ *   - Full-size cell buttons that fill their grid slots.
+ *   - Disabled, winner, corner, and text styling for clear game feedback.
+ *
+ * Dependencies:
+ *   ../../global-config.css  — CSS custom properties (colors, etc.)
+ *   ../../control/button.css — Base .button styles
+ * =============================================================================
+ */
+@import "../../global-config.css";
+@import "../../control/button.css";
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane — the board container
+   Draws the board frame using two layered backgrounds: a dark outer layer and
+   the default accent layer inset by 3px. Padding keeps the cell buttons inside
+   the frame, while horizontal and vertical gaps create the visible grid lines.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane {
+    -fx-background-color: -fx-darken-background-color, -fx-default-color;
+    -fx-background-radius: 10, 8;
+    -fx-background-insets: 0, 3;
+
+    -fx-padding: 8;
+
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button — board cells
+   Each cell expands to fill its grid slot and uses a square background so the
+   grid gaps define the board lines. Large bold script text gives X/O marks a
+   strong, game-piece-like appearance.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button {
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+
+    -fx-background-color: -fx-default-background-color;
+    -fx-background-radius: 0;
+
+    -fx-font-size: 50;
+    -fx-font-weight: bold;
+    -fx-font-family: "URW Chancery L";
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane:disabled > .button — inactive board state
+   When the whole board is disabled, every cell switches to the dark background
+   colour to communicate that input is temporarily unavailable.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane:disabled > .button {
+    -fx-background-color: -fx-darken-background-color;
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button:disabled — occupied/locked cells
+   Keeps disabled cells fully opaque so already-played marks remain readable
+   and do not look faded after a move is committed.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button:disabled {
+    -fx-opacity: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button:winner — winning cells
+   Highlights cells that are part of the winning line with a lighter derivation
+   of the accent colour, making the result stand out from normal cells.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button:winner {
+    -fx-background-color: derive(-fx-default-color, 60%);
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button.top-left — top-left board corner
+   Rounds only the outer top-left cell corner so the cell follows the rounded
+   shape of the surrounding board frame.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button.top-left {
+    -fx-background-radius: 4 0 0 0;
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button.top-right — top-right board corner
+   Rounds only the outer top-right cell corner so the cell follows the rounded
+   shape of the surrounding board frame.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button.top-right {
+    -fx-background-radius: 0 4 0 0;
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button.bottom-left — bottom-left board corner
+   Rounds only the outer bottom-left cell corner so the cell follows the rounded
+   shape of the surrounding board frame.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button.bottom-left {
+    -fx-background-radius: 0 0 0 4;
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button.bottom-right — bottom-right board corner
+   Rounds only the outer bottom-right cell corner so the cell follows the
+   rounded shape of the surrounding board frame.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button.bottom-right {
+    -fx-background-radius: 0 0 4 0;
+}
+
+/* ---------------------------------------------------------------------------
+   .play-area-panel-root-pane > .button > .text — cell mark text
+   Colours the rendered X/O mark with the default accent colour, keeping the
+   game pieces visually tied to the board theme.
+   --------------------------------------------------------------------------- */
+.play-area-panel-root-pane > .button > .text {
+    -fx-fill: -fx-default-color;
+}

@@ -1,10 +1,9 @@
 package com.mj.tic.tac.toe.javafx.kotlin.controller
 
 import com.mj.tic.tac.toe.javafx.kotlin.util.ResourceBundleUtil
-import javafx.fxml.Initializable
 import java.net.URL
 import java.util.ResourceBundle
-import java.util.concurrent.Executors
+import javafx.fxml.Initializable
 
 /**
  * @author Montaser Sbaih
@@ -16,21 +15,14 @@ import java.util.concurrent.Executors
 
 abstract class BaseController : Initializable {
 
-    protected var count: Byte = 0
-
-    protected val turn: Byte
-        get() = (count % 2).toByte()
+    protected var mediator: ControllerMediator? = null
+        private set
 
     abstract override fun initialize(url: URL, resources: ResourceBundle)
 
-    protected fun getString(key: String): String = ResourceBundleUtil.getString(key)
-
-    companion object {
-
-        @JvmStatic
-        protected val executor = Executors.newSingleThreadExecutor()
-
-        @JvmStatic
-        protected val matrix = Array(3) { ByteArray(3) }
+    fun setMediator(mediator: ControllerMediator?) {
+        this.mediator = mediator
     }
+
+    protected fun getLocalizedText(key: String): String = ResourceBundleUtil.getString(key)
 }

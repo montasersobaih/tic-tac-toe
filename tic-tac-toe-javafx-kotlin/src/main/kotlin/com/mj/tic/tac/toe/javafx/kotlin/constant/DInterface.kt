@@ -12,8 +12,8 @@ import com.mj.tic.tac.toe.javafx.kotlin.util.FXInterface
 
 enum class DInterface(private val value: String) : FXInterface {
 
-    ALERT_DIALOG("${ResourcePath.DIALOG}alert_dialog.fxml"),
-    CONFIRM_DIALOG("${ResourcePath.DIALOG}confirm_dialog.fxml");
+    CONFIRM_DIALOG("${ResourcePath.DIALOG}confirm_dialog.fxml"),
+    DIFFICULTY_DIALOG("${ResourcePath.DIALOG}difficulty_dialog.fxml");
 
     override fun toString(): String = value
 }

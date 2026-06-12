@@ -8,10 +8,19 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 
-class HelloApplication : Application() {
+/**
+ * @author Montaser Sbaih
+ * @version 1.0
+ * @email montaser.jjs@gmail.com
+ * @phone +962-786258874
+ * @since 20-01-2023
+ */
 
+class StartupApplication : Application() {
+
+    @Throws(Exception::class)
     override fun start(stage: Stage) {
-        val pane = FXMLUtil.loadInterface(UInterface.APPLICATION_PAGE);
+        val pane = FXMLUtil.loadInterface(UInterface.APPLICATION_PAGE)!!
 
         val scene = Scene(pane, 600.0, 400.0)
         scene.fill = Color.TRANSPARENT
@@ -24,5 +33,5 @@ class HelloApplication : Application() {
 }
 
 fun main() {
-    Application.launch(HelloApplication::class.java)
+    Application.launch(StartupApplication::class.java)
 }

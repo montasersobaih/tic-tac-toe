@@ -1,26 +1,25 @@
 package com.mj.tic.tac.toe.javafx.kotlin.controller.view
 
 import com.mj.tic.tac.toe.javafx.kotlin.controller.BaseController
+import com.mj.tic.tac.toe.javafx.kotlin.controller.ControllerMediator
+import com.mj.tic.tac.toe.javafx.kotlin.controller.GameStateManager
 import com.mj.tic.tac.toe.javafx.kotlin.controller.layout.ApplicationBarController
-import com.mj.tic.tac.toe.javafx.kotlin.dialog.ConfirmDialog
-import com.mj.tic.tac.toe.javafx.kotlin.task.CheckWinnerTask
-import com.mj.tic.tac.toe.javafx.kotlin.task.FinishGameTask
-import com.mj.tic.tac.toe.javafx.kotlin.task.MarkCellTask
-import com.mj.tic.tac.toe.javafx.kotlin.task.ResetPlayAreaTask
-import javafx.concurrent.WorkerStateEvent
-import javafx.event.EventHandler
-import javafx.fxml.FXML
-import javafx.scene.Scene
-import javafx.scene.control.Button
-import javafx.scene.control.Label
-import javafx.scene.control.ListView
-import javafx.scene.input.MouseEvent
-import javafx.scene.layout.GridPane
-import javafx.scene.layout.StackPane
-import javafx.stage.Window
+import com.mj.tic.tac.toe.javafx.kotlin.controller.layout.LeftPanelController
+import com.mj.tic.tac.toe.javafx.kotlin.controller.layout.PlayAreaPanelController
+import com.mj.tic.tac.toe.javafx.kotlin.task.GameOverTask
+import com.mj.tic.tac.toe.javafx.kotlin.task.PlayGameTask
+import com.mj.tic.tac.toe.javafx.kotlin.task.ResetGameTask
+import com.mj.tic.tac.toe.javafx.kotlin.util.GameState
 import java.net.URL
-import java.util.Objects
 import java.util.ResourceBundle
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import javafx.application.Platform
+import javafx.concurrent.Task
+import javafx.concurrent.Worker
+import javafx.concurrent.WorkerStateEvent
+import javafx.fxml.FXML
+import javafx.scene.layout.StackPane
 
 /**
  * @author Montaser Sbaih
@@ -30,7 +29,11 @@ import java.util.ResourceBundle
  * @since 20-01-2023
  */
 
-class ViewController : BaseController() {
+class ViewController : BaseController(), ControllerMediator {
+
+    private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+
+    private val gameStateManager = GameStateManager()
 
     @FXML
     private lateinit var viewPane: StackPane
@@ -39,90 +42,45 @@ class ViewController : BaseController() {
     private lateinit var applicationBarController: ApplicationBarController
 
     @FXML
-    private lateinit var contentPane: StackPane
+    private lateinit var leftPanelController: LeftPanelController
 
     @FXML
-    private lateinit var wins: ListView<String>
-
-    @FXML
-    private lateinit var totalDraw: Label
-
-    @FXML
-    private lateinit var totalXWins: Label
-
-    @FXML
-    private lateinit var totalOWins: Label
-
-    @FXML
-    private lateinit var playAreaPane: GridPane
+    private lateinit var playAreaPanelController: PlayAreaPanelController
 
     override fun initialize(url: URL, resources: ResourceBundle) {
-        viewPane.sceneProperty().addListener { _, _, scene: Scene ->
-            scene.windowProperty().addListener { _, _, window: Window ->
-                window.setOnCloseRequest { executor.shutdown() }
+        Platform.runLater { viewPane.scene?.window?.setOnCloseRequest { executor.shutdown() } }
+
+        applicationBarController.setTitle(getLocalizedText("control.label.title.app"))
+
+        listOf(leftPanelController, playAreaPanelController).forEach { it.setMediator(this) }
+
+        gameStateManager.subscribe(GameState.RESET_GAME, playAreaPanelController)
+        gameStateManager.subscribe(GameState.NEW_GAME, leftPanelController, playAreaPanelController)
+        gameStateManager.subscribe(GameState.GAME_OVER, leftPanelController, playAreaPanelController)
+    }
+
+    override fun execute(task: Task<*>) {
+        task.setOnSucceeded(this::onTaskSucceeded)
+        executor.execute(task)
+    }
+
+    fun onTaskSucceeded(event: WorkerStateEvent) {
+        when (val worker = event.source as Worker<*>) {
+            is ResetGameTask -> {
+                executor.execute { gameStateManager.publish<Any>(GameState.RESET_GAME) }
             }
-        }
 
-        applicationBarController.setTitle(getString("control.label.title.app"))
-    }
-
-    private fun resetPlayArea() {
-        val task = ResetPlayAreaTask(matrix, playAreaPane)
-        task.onSucceeded = EventHandler { onTaskSucceeded(it) }
-        executor.execute(task)
-    }
-
-    @FXML
-    private fun onResetGame(event: MouseEvent) {
-        wins.items.clear()
-        totalDraw.text = "0"
-        totalXWins.text = "0"
-        totalOWins.text = "0"
-        playAreaPane.isDisable = true
-        this.resetPlayArea()
-    }
-
-    @FXML
-    private fun onPlayGame(event: MouseEvent) {
-        playAreaPane.isDisable = false
-        this.resetPlayArea()
-    }
-
-    @FXML
-    private fun onCellClicked(event: MouseEvent) {
-        val button = event.source as Button
-        val task = MarkCellTask(matrix, button, super.turn.toInt())
-        task.setOnSucceeded(::onTaskSucceeded)
-        executor.execute(task)
-    }
-
-    private fun onTaskSucceeded(event: WorkerStateEvent) {
-        val worker = event.source
-        if (worker is ResetPlayAreaTask) {
-            super.count = 0
-        } else if (worker is MarkCellTask) {
-            val task = CheckWinnerTask(matrix, worker.value!!)
-            task.onSucceeded = EventHandler { onTaskSucceeded(it) }
-            executor.execute(task)
-        } else if (worker is CheckWinnerTask) {
-            val winner = worker.value
-            if (Objects.nonNull(winner) || ++super.count == (9).toByte()) {
-                val label = when (winner) {
-                    null -> totalDraw
-                    else -> if (super.turn.toInt() == 0) totalXWins else totalOWins
+            is PlayGameTask -> {
+                val difficulty = worker.value
+                if (difficulty != null) {
+                    executor.execute { gameStateManager.publish(GameState.NEW_GAME, difficulty) }
                 }
-
-                val task = FinishGameTask(winner!!, playAreaPane, wins, label)
-                task.setOnSucceeded(::onTaskSucceeded)
-                executor.execute(task)
             }
-        } else if (worker is FinishGameTask) {
-            ConfirmDialog.getInstance(contentPane)
-                .setMessage(worker.getMessage())
-                .setOnConfirmListener { resetPlayArea() }
-                .setOnDeclineListener { playAreaPane.isDisable = true }
-                .build()
-                .show()
+
+            is GameOverTask -> {
+                val wPlayer = worker.value
+                executor.execute { gameStateManager.publish(GameState.GAME_OVER, wPlayer) }
+            }
         }
     }
 }

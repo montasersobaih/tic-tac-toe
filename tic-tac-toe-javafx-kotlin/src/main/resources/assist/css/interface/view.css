@@ -1,9 +1,28 @@
+/*
+ * =============================================================================
+ * view.css — Main application view styling
+ *
+ * Styles the top-level layout of the Tic-Tac-Toe application window, which
+ * contains the custom title bar (application bar) at the top and a content
+ * area (content-pane) below it that hosts the left sidebar and the central
+ * game board.
+ *
+ * Dependencies:
+ *   ../../global-config.css  — CSS custom properties (colors, shadows, etc.)
+ *   ../../control/pane.css   — Base .pane styles
+ *   ../../control/label.css  — Base .label styles
+ * =============================================================================
+ */
 @import "../global-config.css";
 @import "../control/pane.css";
 @import "../control/label.css";
-@import "../control/button.css";
-@import "../control/scroll-bar.css";
 
+/* ---------------------------------------------------------------------------
+   .pane — the outermost application window container
+   Provides a rounded, border-accented backdrop for the entire window. The
+   20px border radius creates a soft overall shape, while the 2px coloured
+   border (-fx-default-color) frames the window content.
+   --------------------------------------------------------------------------- */
 .pane {
     -fx-background-color: -fx-default-background-color;
     -fx-background-radius: 20;
@@ -13,133 +32,31 @@
     -fx-border-width: 2;
 }
 
+/* ---------------------------------------------------------------------------
+   .pane > * > .app-bar — the custom title bar (direct child of pane content)
+   The application bar sits at the top of the content and uses a larger
+   top-border radius (13px) so it follows the window's rounded top corners
+   while its bottom corners are square (0px) to meet the content area below.
+   --------------------------------------------------------------------------- */
 .pane > * > .app-bar {
     -fx-background-radius: 13 13 0 0;
 
     -fx-effect: none;
 }
 
+/* ---------------------------------------------------------------------------
+   .pane > * > .content-pane — the main content area below the title bar
+   A layered background section that holds the left panel and the game board.
+   The dark outer layer creates a slim border effect, and the inner layer
+   uses the default background colour. The bottom corners are rounded (13px)
+   to match the window shape, while the top corners are square to meet the
+   application bar above.
+   --------------------------------------------------------------------------- */
 .pane > * > .content-pane {
+    -fx-padding: 8 4 4 4;
+
     -fx-background-color: -fx-darken-background-color, -fx-default-background-color;
     -fx-background-radius: 0 0 13 13, 10 10 13 13;
 
     -fx-effect: none, dropshadow(three-pass-box, -fx-30-primary-shadow-opacity, 25, 0, 3, 3);
-}
-
-.left-panel {
-    -fx-background-color: -fx-darken-background-color;
-    -fx-background-radius: 10;
-
-    -fx-padding: 3;
-}
-
-.left-panel > .header > .button.reset {
-    -fx-background-radius: 8 0 0 3;
-}
-
-.left-panel > .header > .button.play {
-    -fx-background-radius: 0 8 3 0;
-}
-
-.left-panel > .list-view.body {
-    -fx-background-color: -fx-darken-background-color;
-    -fx-background-radius: 3;
-
-    -fx-border-color: -fx-default-color;
-    -fx-border-radius: 3;
-}
-
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell {
-    -fx-background-insets: 2;
-    -fx-background-radius: 3;
-
-    -fx-alignment: center;
-
-    -fx-padding: 8;
-}
-
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even,
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:even:selected {
-    -fx-background-color: -fx-default-color;
-}
-
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:odd,
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:odd:selected {
-    -fx-background-color: derive(-fx-default-color, 25%);
-}
-
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell:empty {
-    -fx-background-color: transparent;
-}
-
-.left-panel > .list-view.body > .virtual-flow > .clipped-container > .sheet > .list-cell > .text {
-    -fx-fill: white;
-    -fx-font-weight: bold;
-}
-
-.left-panel > .footer {
-    -fx-background-color: -fx-default-color;
-    -fx-background-radius: 3 3 8 8;
-
-
-    -fx-padding: 0 0 0 8;
-}
-
-.left-panel > .footer > .label > .text {
-    -fx-fill: -fx-default-text-color;
-}
-
-.center-panel {
-    -fx-background-color: -fx-darken-background-color, -fx-default-color;
-    -fx-background-radius: 10, 8;
-    -fx-background-insets: 0, 3;
-
-    -fx-padding: 8;
-
-    -fx-hgap: 5;
-    -fx-vgap: 5;
-}
-
-.center-panel > .button {
-    -fx-max-width: infinity;
-    -fx-max-height: infinity;
-
-    -fx-background-color: -fx-default-background-color;
-    -fx-background-radius: 0;
-
-    -fx-font-size: 50;
-    -fx-font-weight: bold;
-    -fx-font-family: "URW Chancery L";
-}
-
-.center-panel:disabled > .button {
-    -fx-background-color: -fx-darken-background-color;
-}
-
-.center-panel > .button:disabled {
-    -fx-opacity: 1;
-}
-
-.center-panel > .button:winner {
-     -fx-background-color: derive(-fx-default-color, 60%);
-}
-
-.center-panel > .button.top-left {
-    -fx-background-radius: 4 0 0 0;
-}
-
-.center-panel > .button.top-right {
-    -fx-background-radius: 0 4 0 0;
-}
-
-.center-panel > .button.bottom-left {
-    -fx-background-radius: 0 0 0 4;
-}
-
-.center-panel > .button.bottom-right {
-    -fx-background-radius: 0 0 4 0;
-}
-
-.center-panel > .button > .text {
-    -fx-fill: -fx-default-color;
 }

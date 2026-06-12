@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" prefHeight="300.0" prefWidth="186.0"
+            styleClass="left-panel-root-pane" stylesheets="@../../assist/css/interface/layout/left-panel.css"
+            xmlns="http://javafx.com/javafx/26"
+            fx:controller="com.mj.tic.tac.toe.javafx.kotlin.controller.layout.LeftPanelController">
+    <top>
+        <GridPane styleClass="header" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="93.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="93.0"/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <JFXButton maxWidth="1.7976931348623157E308" onMouseClicked="#onResetGame" styleClass="reset"
+                       text="%control.button.reset"/>
+            <JFXButton maxWidth="1.7976931348623157E308" onMouseClicked="#onPlayGame" styleClass="play"
+                       text="%control.button.play" GridPane.columnIndex="1"/>
+            <BorderPane styleClass="border-pane" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <left>
+                    <Label maxHeight="1.7976931348623157E308" text="%control.label.difficulty.level"
+                           BorderPane.alignment="CENTER"/>
+                </left>
+                <center>
+                    <Label fx:id="displayDifficulty" alignment="CENTER" maxHeight="1.7976931348623157E308"
+                           maxWidth="1.7976931348623157E308" text="%control.label.difficulty.default"
+                           BorderPane.alignment="CENTER"/>
+                </center>
+            </BorderPane>
+        </GridPane>
+    </top>
+    <center>
+        <ListView fx:id="wins" styleClass="body" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets bottom="3" top="3"/>
+            </BorderPane.margin>
+        </ListView>
+    </center>
+    <bottom>
+        <GridPane styleClass="footer" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="0.0" prefWidth="50.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%control.label.wins.human"
+                   GridPane.rowIndex="1"/>
+            <Label fx:id="totalHumanWins" alignment="CENTER" maxHeight="1.7976931348623157E308"
+                   maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                   text="%control.label.wins.computer" GridPane.rowIndex="2"/>
+            <Label fx:id="totalMachineWins" alignment="CENTER" maxHeight="1.7976931348623157E308"
+                   maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%control.label.draw"/>
+            <Label fx:id="totalDraw" alignment="CENTER" maxHeight="1.7976931348623157E308"
+                   maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1"/>
+        </GridPane>
+    </bottom>
+</BorderPane>

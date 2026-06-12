@@ -1,11 +1,15 @@
 package com.mj.tic.tac.toe.javafx.kotlin.util
 
 /**
- * @author Montaser Jamal
+ * @author Montaser Sbaih
  * @version 1.0
  * @email montaser.jjs@gmail.com
  * @phone +962-786258874
- * @since 25-01-2023
+ * @since 29-05-2026
  */
 
-data class Mark(val symbol: Char, val coordinates: Coordinates)
+enum class GameState {
+    RESET_GAME,
+    NEW_GAME,
+    GAME_OVER
+}

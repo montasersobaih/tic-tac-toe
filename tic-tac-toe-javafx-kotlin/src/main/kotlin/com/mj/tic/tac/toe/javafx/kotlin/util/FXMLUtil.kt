@@ -1,10 +1,9 @@
 package com.mj.tic.tac.toe.javafx.kotlin.util
 
-import javafx.fxml.FXMLLoader
-import javafx.scene.layout.Pane
 import java.util.Optional
 import java.util.ResourceBundle
-import java.util.stream.Stream
+import javafx.fxml.FXMLLoader
+import javafx.scene.layout.Pane
 
 /**
  * @author Montaser Jamal
@@ -16,19 +15,14 @@ import java.util.stream.Stream
 
 object FXMLUtil {
 
-    fun getFXMLLoader(fxInterface: FXInterface): FXMLLoader? {
-        return Stream.of(fxInterface)
-            .map(FXInterface::toString)
-            .map(FXMLUtil.javaClass::getResource)
-            .map(::FXMLLoader)
-            .peek {
-                Optional
-                    .of("controls")
-                    .map(ResourceBundle::getBundle)
-                    .ifPresent(it!!::setResources)
+    fun getFXMLLoader(fxInterface: FXInterface): FXMLLoader {
+        return fxInterface
+            .toString()
+            .let(FXMLUtil.javaClass::getResource)
+            .let(::FXMLLoader)
+            .also { loader ->
+                ResourceBundle.getBundle("controls")?.let(loader::setResources)
             }
-            .findFirst()
-            .orElse(null)
     }
 
     fun loadInterface(loader: FXMLLoader?): Pane? = loader!!.load()

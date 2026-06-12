@@ -1,7 +1,9 @@
 package com.mj.tic.tac.toe.javafx.kotlin.task
 
+import com.mj.tic.tac.toe.javafx.kotlin.util.Board
 import com.mj.tic.tac.toe.javafx.kotlin.util.Coordinates
 import com.mj.tic.tac.toe.javafx.kotlin.util.Mark
+import com.mj.tic.tac.toe.javafx.kotlin.util.Player
 import javafx.scene.control.Button
 import javafx.scene.layout.GridPane
 
@@ -13,34 +15,33 @@ import javafx.scene.layout.GridPane
  * @since 22-01-2023
  */
 
-class MarkCellTask : BaseTask<Mark?> {
+class MarkCellTask : BaseTask<Mark> {
 
-    private val player = charArrayOf('X', 'O')
+    private val symbols = charArrayOf('X', 'O')
 
-    private val matrix: Array<ByteArray>
+    private val board: Board
 
     private val button: Button
 
-    private val turn: Int
+    private val player: Player
 
-    @Suppress("ConvertSecondaryConstructorToPrimary")
-    constructor(matrix: Array<ByteArray>, button: Button, turn: Int) : super() {
-        this.matrix = matrix
+    constructor(board: Board, button: Button, player: Player) : super() {
+        this.board = board
         this.button = button
-        this.turn = turn
+        this.player = player
     }
 
     override fun call(): Mark {
-        val i = GridPane.getRowIndex(button)
-        val j = GridPane.getColumnIndex(button)
-        val coordinates = Coordinates(i, j)
+        val x = GridPane.getRowIndex(button)
+        val y = GridPane.getColumnIndex(button)
+        val coordinates = Coordinates(x, y)
 
-        matrix[i][j] = (turn + 1).toByte()
-        return Mark(player[turn], coordinates)
+        board.mark(coordinates, player)
+        return Mark(symbols[board.markedCellsCount % 2], coordinates)
     }
 
     override fun succeeded() {
         button.isDisable = true
-        button.text = Character.toString(player[turn])
+        button.text = value.symbol.toString()
     }
 }

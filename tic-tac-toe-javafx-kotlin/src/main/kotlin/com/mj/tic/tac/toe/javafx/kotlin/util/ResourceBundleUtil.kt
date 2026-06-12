@@ -1,6 +1,6 @@
 package com.mj.tic.tac.toe.javafx.kotlin.util
 
-import java.util.*
+import java.util.ResourceBundle
 
 /**
  * @author Montaser Sbaih
@@ -23,11 +23,9 @@ object ResourceBundleUtil {
     }
 
     fun getString(key: String): String {
-        if (Objects.nonNull(key)) {
-            for (resource in resources) {
-                if (resource.containsKey(key)) {
-                    return resource.getString(key)
-                }
+        for (resource in resources) {
+            if (resource.containsKey(key)) {
+                return resource.getString(key)
             }
         }
 

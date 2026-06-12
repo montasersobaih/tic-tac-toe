@@ -8,4 +8,4 @@ package com.mj.tic.tac.toe.javafx.kotlin.util
  * @since 25-01-2023
  */
 
-data class Winner(val player: Char, val coordinates: List<Coordinates>)
+data class Winner(val player: Player, val locations: List<Coordinates>)
